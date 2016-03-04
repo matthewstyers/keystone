@@ -9,7 +9,7 @@ var LargeFileColumn = React.createClass({
 	render: function () {
 		return (
 			<td className="ItemList__col">
-				<div className="ItemList__value ItemList__value--local-file">{this.renderValue()}</div>
+				<div className="ItemList__value ItemList__value--large-file">{this.renderValue()}</div>
 			</td>
 		);
 	},

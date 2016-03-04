@@ -12,11 +12,11 @@ module.exports = Field.create({
 	},
 
 	fileFieldNode () {
-		return ReactDOM.findDOMNode(this.refs.largeFileField);
+		return ReactDOM.findDOMNode(this.refs.fileField);
 	},
 
 	changeFile () {
-		this.largeFileFieldNode().click();
+		this.fileFieldNode().click();
 	},
 
 	getFileSource () {
@@ -36,7 +36,7 @@ module.exports = Field.create({
 	},
 
 	undoRemove () {
-		this.largeFileFieldNode().value = '';
+		this.fileFieldNode().value = '';
 		this.setState({
 			removeExisting: false,
 			localSource: null,
@@ -58,7 +58,7 @@ module.exports = Field.create({
 		};
 
 		if (this.hasLocal()) {
-			this.largeFileFieldNode().value = '';
+			this.fileFieldNode().value = '';
 		} else if (this.hasExisting()) {
 			state.removeExisting = true;
 
@@ -94,7 +94,7 @@ module.exports = Field.create({
 
 	getFilename () {
 		if (this.hasLocal()) {
-			return this.largeFileFieldNode().value.split('\\').pop();
+			return this.fileFieldNode().value.split('\\').pop();
 		} else {
 			return this.props.value.filename;
 		}
@@ -112,7 +112,7 @@ module.exports = Field.create({
 		}
 
 		return (
-			<div key={this.props.path + '_details'} className="file-details">
+			<div key={this.props.gridId + '_details'} className="file-details">
 				{values}
 				{add}
 			</div>
@@ -179,7 +179,7 @@ module.exports = Field.create({
 
 	renderFileToolbar () {
 		return (
-			<div key={this.props.path + '_toolbar'} className="file-toolbar">
+			<div key={this.props.gridId + '_toolbar'} className="file-toolbar">
 				<div className="u-float-left">
 					<Button onClick={this.changeFile}>
 						{this.hasFile() ? 'Change' : 'Upload'} File

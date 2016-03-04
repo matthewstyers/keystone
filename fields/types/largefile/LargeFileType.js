@@ -3,17 +3,26 @@
  */
 
 var fs = require('fs-extra');
+var fsNative = require('fs');
 var path = require('path');
 var _ = require('lodash');
 var Grid = require('gridfs-stream');
 var grappling = require('grappling-hook');
 var keystone = require('../../../');
 var moment = require('moment');
+var mongoose = keystone.mongoose;
 var util = require('util');
 var utils = require('keystone-utils');
 var super_ = require('../Type');
+var gridfs;
 
+var connection = mongoose.connection;
 
+connection.once('open', function() {
+		console.log('mongo connection open, motherfucker.');
+		Grid.mongo = mongoose.mongo;
+		gridfs = new Grid(connection.db);
+});
 
 /**
  * largefile FieldType Constructor
@@ -22,6 +31,7 @@ var super_ = require('../Type');
  */
 
 function largefile(list, path, options) {
+
 	grappling.mixin(this)
 		.allowHooks('move');
 	this._underscoreMethods = ['format', 'uploadFile'];
@@ -67,7 +77,7 @@ util.inherits(largefile, super_);
  */
 
 largefile.prototype.addToSchema = function() {
-
+	console.log('addToSchema started');
 	var field = this;
 	var schema = this.list.schema;
 
@@ -75,7 +85,7 @@ largefile.prototype.addToSchema = function() {
 		// fields
 		filename: this._path.append('.filename'),
 		originalname: this._path.append('.originalname'),
-		path: this._path.append('.path'),
+		gridId: this._path.append('.gridId'),
 		size: this._path.append('.size'),
 		filetype: this._path.append('.filetype'),
 		// virtuals
@@ -88,30 +98,38 @@ largefile.prototype.addToSchema = function() {
 	var schemaPaths = this._path.addTo({}, {
 		filename: String,
 		originalname: String,
-		path: String,
 		size: Number,
 		filetype: String,
 	});
-
 	schema.add(schemaPaths);
 
 	// exists checks for a matching file at run-time
 	var exists = function(item) {
-		var filepath = item.get(paths.path);
-		var filename = item.get(paths.filename);
-
-		if (!filepath || !filename) {
-			return false;
-		}
-
-		return fs.existsSync(path.join(filepath, filename));
+		gridfs.exist({
+			_id: item.gridId
+		}, function(err, found) {
+			if (err) {
+				console.log(err);
+				return false;
+			}
+			else {
+				if (found) {
+					console.log('File exists');
+					return true;
+				}
+				else {
+					console.log('File does not exist');
+					return false;
+				}
+			}
+		});
 	};
 
 	// reset clears the value of the field
 	var reset = function(item) {
-		item.set(field.path, {
+		item.set(field.gridId, {
 			filename: '',
-			path: '',
+			gridId: '',
 			size: 0,
 			filetype: '',
 		});
@@ -136,7 +154,13 @@ largefile.prototype.addToSchema = function() {
 		 */
 		delete: function() {
 			if (exists(this)) {
-				fs.unlinkSync(path.join(this.get(paths.path), this.get(paths.filename)));
+				gridfs.remove({
+				_id: this.gridId
+			}, function(err) {
+				if (err) return err;
+				console.log('success');
+			});
+
 			}
 			reset(this);
 		},
@@ -181,7 +205,7 @@ largefile.prototype.addToSchema = function() {
 largefile.prototype.format = function(item) {
 	if (!item.get(this.paths.filename)) return '';
 	if (this.hasFormatter()) {
-		var file = item.get(this.path);
+		var file = item.get(this.gridId);
 		file.href = this.href(item);
 		return this.options.format.call(this, item, file);
 	}
@@ -208,7 +232,8 @@ largefile.prototype.hasFormatter = function() {
 
 largefile.prototype.href = function(item) {
 	if (!item.get(this.paths.filename)) return '';
-	var prefix = this.options.prefix ? this.options.prefix : item.get(this.paths.path);
+	var prefix = this.options.prefix ? this.options.prefix : item.get(this.paths
+		.path);
 	return prefix + '/' + item.get(this.paths.filename);
 };
 
@@ -220,7 +245,7 @@ largefile.prototype.href = function(item) {
  */
 
 largefile.prototype.isModified = function(item) {
-	return item.isModified(this.paths.path);
+	return item.isModified(this.paths.gridId);
 };
 
 
@@ -255,11 +280,6 @@ largefile.prototype.updateItem = function(item, data, callback) { // eslint-disa
  */
 
 largefile.prototype.uploadFile = function(item, file, update, callback) {
-	var mongoose = keystone.mongoose;
-	var connection = mongoose.connection;
-
-	Grid.mongo = mongoose.mongo;
-
 	var field = this;
 	var prefix = field.options.datePrefix ? moment()
 		.format(field.options.datePrefix) + '-' : '';
@@ -277,33 +297,32 @@ largefile.prototype.uploadFile = function(item, file, update, callback) {
 	}
 
 	var doMove = function(callback) {
-		var gridfs = new Grid(connection.db);
-
-
+		console.log('doMove triggered');
 		if (typeof field.options.filename === 'function') {
 			filename = field.options.filename(item, file);
 		}
 
-
 		var writestream = gridfs.createWriteStream({
 			filename: filename
 		});
-		fs.createReadStream(file.path).pipe(writestream);
+		fsNative.createReadStream(file.path)
+			.pipe(writestream);
 
-		writestream.on('close', function(err, gridFile) {
+		writestream.on('close', function(gridFile) {
 
-			if (err) return callback(err);
+			// if (err) return callback(err);
+			console.log(gridFile);
 
 			var fileData = {
 				gridId: gridFile._id,
 				filename: filename,
 				originalname: file.originalname,
-				size: file.size,
+				size: gridFile.size,
 				filetype: filetype,
 			};
 
 			if (update) {
-				item.set(field.path, fileData);
+				item.set(field.gridId, fileData);
 			}
 
 			callback(null, fileData);
@@ -335,7 +354,7 @@ largefile.prototype.uploadFile = function(item, file, update, callback) {
  */
 
 largefile.prototype.getRequestHandler = function(item, req, paths, callback) {
-
+	console.log('balls');
 	var field = this;
 
 	if (utils.isFunction(paths)) {
@@ -359,7 +378,12 @@ largefile.prototype.getRequestHandler = function(item, req, paths, callback) {
 		}
 
 		if (req.files && req.files[paths.upload] && req.files[paths.upload].size) {
+			console.log('getRequestHandler passed');
 			return field.uploadFile(item, req.files[paths.upload], true, callback);
+
+		}
+		else {
+			console.log('getRequestHandler failed');
 		}
 
 		return callback();
@@ -367,7 +391,6 @@ largefile.prototype.getRequestHandler = function(item, req, paths, callback) {
 	};
 
 };
-
 
 /**
  * Immediately handles a standard form submission for the field (see `getRequestHandler()`)
