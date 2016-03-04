@@ -42,11 +42,6 @@ function largefile(list, path, options) {
 
 	largefile.super_.call(this, list, path, options);
 
-	// validate destination dir
-	if (!options.dest) {
-		throw new Error('Invalid Configuration\n\n' + 'largefile fields (' + list.key +
-			'.' + path + ') require the "dest" option to be set.');
-	}
 	// Allow hook into before and after
 	if (options.pre && options.pre.move) {
 		this.pre('move', options.pre.move);

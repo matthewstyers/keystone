@@ -3,7 +3,7 @@
 import Field from '../Field';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Button, FormField, FormInput, FormNote } from 'elemental0';
+import { Button, FormField, FormInput, FormNote } from 'elemental';
 
 module.exports = Field.create({
 

@@ -13,6 +13,7 @@ var Columns = {
 	geopoint: require('../../fields/types/geopoint/GeoPointColumn'),
 	html: require('../../fields/types/html/HtmlColumn'),
 	key: require('../../fields/types/key/KeyColumn'),
+	largefile: require('../../fields/types/largefile/LargeFileColumn'),
 	localfile: require('../../fields/types/localfile/LocalFileColumn'),
 	localfiles: require('../../fields/types/localfiles/LocalFilesColumn'),
 	location: require('../../fields/types/location/LocationColumn'),
