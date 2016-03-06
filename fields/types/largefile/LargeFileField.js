@@ -215,7 +215,7 @@ module.exports = Field.create({
 		}
 
 		return (
-			<FormField label={this.props.label} className="field-type-largefile">
+			<FormField label={this.props.label} className="field-type-localfile">
 
 				{this.renderFileField()}
 				{this.renderFileAction()}

@@ -77,7 +77,6 @@ util.inherits(largefile, super_);
  */
 
 largefile.prototype.addToSchema = function() {
-	console.log('addToSchema started');
 	var field = this;
 	var schema = this.list.schema;
 
@@ -233,7 +232,7 @@ largefile.prototype.hasFormatter = function() {
 largefile.prototype.href = function(item) {
 	if (!item.get(this.paths.filename)) return '';
 	var prefix = this.options.prefix ? this.options.prefix : item.get(this.paths
-		.path);
+		.gridId);
 	return prefix + '/' + item.get(this.paths.filename);
 };
 
@@ -280,12 +279,12 @@ largefile.prototype.updateItem = function(item, data, callback) { // eslint-disa
  */
 
 largefile.prototype.uploadFile = function(item, file, update, callback) {
+	console.log('uploadFile started');
 	var field = this;
 	var prefix = field.options.datePrefix ? moment()
 		.format(field.options.datePrefix) + '-' : '';
 	var filename = prefix + file.name;
 	var filetype = file.mimetype || file.type;
-
 	if (field.options.allowedTypes && !_.contains(field.options.allowedTypes,
 			filetype)) {
 		return callback(new Error('Unsupported File Type: ' + filetype));
