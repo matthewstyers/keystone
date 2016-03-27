@@ -22,23 +22,23 @@ module.exports = {
 	},
 	'Name field should be visible in initial modal': function (browser) {
 		browser
-			.click(adminUI.cssSelector.homeView.plusIconLinkForNameFieldsTabUnderDashboardFieldsSubheading)
+			.click(adminUI.cssSelector.homeView.plusIconLinkForNamesTabUnderDashboardFieldsSubheading)
 			.waitForElementVisible(adminUI.cssSelector.initialModalView.id)
 			.pause(browser.globals.defaultPauseTimeout);
 
-		browser.expect.element(adminUI.cssSelector.initialModalView.field.name.label)
+		browser.expect.element(adminUI.cssSelector.initialModalView.fieldType.name.name.name.label)
 			.to.be.visible;
-		browser.expect.element(adminUI.cssSelector.initialModalView.field.name.label)
+		browser.expect.element(adminUI.cssSelector.initialModalView.fieldType.name.name.name.label)
 			.text.to.equal('Name');
 
-		browser.expect.element(adminUI.cssSelector.initialModalView.field.name.first)
+		browser.expect.element(adminUI.cssSelector.initialModalView.fieldType.name.name.name.first)
 			.to.be.visible;
-		browser.expect.element(adminUI.cssSelector.initialModalView.field.name.firstPlaceholder)
+		browser.expect.element(adminUI.cssSelector.initialModalView.fieldType.name.name.name.firstPlaceholder)
 			.to.be.visible;
 
-		browser.expect.element(adminUI.cssSelector.initialModalView.field.name.last)
+		browser.expect.element(adminUI.cssSelector.initialModalView.fieldType.name.name.name.last)
 			.to.be.visible;
-		browser.expect.element(adminUI.cssSelector.initialModalView.field.name.lastPlaceholder)
+		browser.expect.element(adminUI.cssSelector.initialModalView.fieldType.name.name.name.lastPlaceholder)
 			.to.be.visible;
 	},
 };

@@ -7,11 +7,12 @@ var SecondaryNavItem = React.createClass({
 		children: React.PropTypes.node.isRequired,
 		className: React.PropTypes.string,
 		href: React.PropTypes.string.isRequired,
+		path: React.PropTypes.string,
 		title: React.PropTypes.string,
 	},
 	render () {
 		return (
-			<li className={this.props.className}>
+			<li className={this.props.className} data-list-path={this.props.path}>
 				<a href={this.props.href} title={this.props.title} tabIndex="-1">
 					{this.props.children}
 				</a>
@@ -42,12 +43,12 @@ var SecondaryNavigation = React.createClass({
 		});
 	},
 	renderNavigation (lists) {
-		let navigation = lists.map((list) => {
-			let href = list.external ? list.path : `${Keystone.adminPath}/${list.path}`;
-			let className = (this.props.currentListKey && this.props.currentListKey === list.path) ? 'active' : null;
+		const navigation = lists.map((list) => {
+			const href = list.external ? list.path : `${Keystone.adminPath}/${list.path}`;
+			const className = (this.props.currentListKey && this.props.currentListKey === list.path) ? 'active' : null;
 
 			return (
-				<SecondaryNavItem key={list.path} className={className} href={href}>
+				<SecondaryNavItem key={list.path} path={list.path} className={className} href={href}>
 					{list.label}
 				</SecondaryNavItem>
 			);
