@@ -57,7 +57,13 @@ number.prototype.addFilterToQuery = function (filter) {
 		var min = utils.number(filter.value.min);
 		var max = utils.number(filter.value.max);
 		if (!isNaN(min) && !isNaN(max)) {
-			query[this.path] = filter.inverted ? { $gte: max, $lte: min } : { $gte: min, $lte: max };
+			if (filter.inverted) {
+				var gte = {}; gte[this.path] = { $gt: max };
+				var lte = {}; lte[this.path] = { $lt: min };
+				query.$or = [gte, lte];
+			} else {
+				query[this.path] = { $gte: min, $lte: max };
+			}
 		}
 		return query;
 	}
