@@ -7,35 +7,32 @@ module.exports = {
 		browser.initialFormPage = browser.page.initialForm();
 
 		browser.app.navigate();
-		browser.app.waitForElementVisible('@signinPage');
+		browser.app.waitForElementVisible('@signinScreen');
 
 		browser.signinPage.signin();
-		browser.app.waitForElementVisible('@homePage');
+		browser.app.waitForElementVisible('@homeScreen');
 	},
 	after: function (browser) {
 		browser.app.signout();
 		browser.end();
 	},
-	'Name field should be visible in initial modal': function (browser) {
+	'Color field should show correctly in the initial modal': function (browser) {
 		browser.app
-			.click('@fieldsMenu')
-			.waitForElementVisible('@listPage')
-			.click('@namesFieldsSubmenu')
-			.waitForElementVisible('@listPage');
+			.click('@fieldListsMenu')
+			.waitForElementVisible('@listScreen')
+			.click('@colorListSubmenu')
+			.waitForElementVisible('@listScreen');
 
 		browser.listPage
 			.click('@createFirstItemButton');
 
 		browser.app
-			.waitForElementVisible('@initialFormPage');
+			.waitForElementVisible('@initialFormScreen');
 
-		browser.initialFormPage.section.form.section.nameList
+		browser.initialFormPage.section.form.section.colorList.section.name
 			.verifyUI();
 
-		browser.initialFormPage.section.form.section.nameList.section.nameField
-			.verifyUI();
-
-		browser.initialFormPage.section.form.section.nameList.section.fieldA
+		browser.initialFormPage.section.form.section.colorList.section.fieldA
 			.verifyUI();
 	},
 	// UNDO ANY STATE CHANGES -- THIS TEST SHOULD RUN LAST
@@ -44,6 +41,6 @@ module.exports = {
 			.click('@cancelButton');
 
 		browser.app
-			.waitForElementVisible('@listPage');
+			.waitForElementVisible('@listScreen');
 	},
 };

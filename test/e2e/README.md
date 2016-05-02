@@ -45,6 +45,7 @@ update the test suite so that any broken tests pass again.  You can run any of t
 from keystone's root directory:
 
     Pre-requisites:
+        - Make sure that you have Firefox installed as this is the default browser used.
         - Make sure that you have a local mongo instance running.
         - Make sure that port 3000 is available; if not please tell the e2e server what port it
           should bind to.  For example, to use port 9999 do the following (in a bash shell):
@@ -100,7 +101,8 @@ any changes it does to the state of the UI)
 
 - add a model for the field to test/e2e/models/fields/<Field-Name>.js
 - add the field collection to the fields nav in test/e2e/server.js
-- add the selectors for the field to test/e2e/adminUI/pages/list
+- add a page object for the field to test/e2e/adminUI/pages/fieldTypes
+- add a page object for the list testing the field to test/e2e/adminUI/pages/lists
 - add uiTest<Field-Name>Field.js to test/e2e/adminUI/group005Fields
 - add uxTest<Field-Name>Field.js to test/e2e/adminUI/group005Fields
 
@@ -150,9 +152,28 @@ Since we use nightwatch Page Objects(PO) quite a bit in e2e then here are some n
                 .click('@fieldsMenu')
 
 - list POs are very special.  The abstract a list and its fields.  They also include the commands that can be executed
-	against the list.  They should all have the same format.  The only things that may vary are the field names, the
-	number of fields, and the selectors, and the number of commands (the more fields the more commands since there
-	are commands per field in the list).  Unlike other page objects, list objects are not meant to be directly created.
-	Instead, these are required by other page objects (e.g., the item page object).  All selector lookups and commands
-	executed against a list are done in the context of the page that required the list.
-	
+    against the list.  They should all have the same format.  The only things that may vary are the field names, the
+    number of fields, and the selectors, and the number of commands (the more fields the more commands since there
+    are commands per field in the list).  Unlike other page objects, list objects are not meant to be directly created.
+    Instead, these are required by other page objects (e.g., the item page object).  All selector lookups and commands
+    executed against a list are done in the context of the page that required the list.
+
+
+## Some Don'ts
+Here are some don'ts that may cross your mind as good ideas but shouldn't:
+
+- don't do something like the following in the lists.  Although it may sound like a good idea at first, think about it
+    a bit more shows some pitfalls the main one being that lists do not know in which form they are being used.  For
+    example, the initial modal form may only show fields that the user marked as _initial_ when defining the keystone
+    list.
+
+        verifyUI: function() {
+            this.expect.section('@name').to.be.visible;
+            this.expect.section('@fieldA').to.be.visible;
+        }
+
+- in [here](http://martinfowler.com/bliki/PageObject.html) Martin Fowler suggests that no assertions be done in page
+    objects.  For the most part we are sticking to that suggestion.  The only place where we currently do assertions
+    is in the field type definitions, since the fields know better about their contained path elements.  So please
+    try not to add assertions anywhere else in page objects as doing so may have subtle pitfalls.
+

@@ -7,34 +7,32 @@ module.exports = {
 		browser.initialFormPage = browser.page.initialForm();
 
 		browser.app.navigate();
-		browser.app.waitForElementVisible('@signinPage');
+		browser.app.waitForElementVisible('@signinScreen');
 
 		browser.signinPage.signin();
-		browser.app.waitForElementVisible('@homePage');
+		browser.app.waitForElementVisible('@homeScreen');
 	},
 	after: function (browser) {
-		browser.app
-			.signout();
-		browser
-			.end();
+		browser.app.signout();
+		browser.end();
 	},
-	'Name field can be created via the initial modal': function (browser) {
+	'Name field can be filled via the initial modal': function (browser) {
 		browser.app
-			.click('@fieldsMenu')
-			.waitForElementVisible('@listPage')
-			.click('@namesFieldsSubmenu')
-			.waitForElementVisible('@listPage');
+			.click('@fieldListsMenu')
+			.waitForElementVisible('@listScreen')
+			.click('@nameListSubmenu')
+			.waitForElementVisible('@listScreen');
 
 		browser.listPage
 			.click('@createFirstItemButton');
 
 		browser.app
-			.waitForElementVisible('@initialFormPage');
+			.waitForElementVisible('@initialFormScreen');
 
-		browser.initialFormPage.section.form.section.nameList.section.nameField
+		browser.initialFormPage.section.form.section.nameList.section.name
 			.fillInput({value: 'Name Field Test 1'});
 
-		browser.initialFormPage.section.form.section.nameList.section.nameField
+		browser.initialFormPage.section.form.section.nameList.section.name
 			.verifyInput({value: 'Name Field Test 1'});
 
 		browser.initialFormPage.section.form.section.nameList.section.fieldA
@@ -44,17 +42,20 @@ module.exports = {
 			.click('@createButton');
 
 		browser.app
-			.waitForElementVisible('@itemPage');
+			.waitForElementVisible('@itemScreen');
 
 		browser.itemPage
 			.expect.element('@flashMessage')
 			.text.to.equal('New Name Name Field Test 1 created.');
 
-		browser.itemPage.section.form.section.nameList.section.nameField
+		browser.itemPage.section.form.section.nameList.section.name
 			.verifyInput({value: 'Name Field Test 1'});
+
+		browser.itemPage.section.form.section.nameList.section.fieldA
+			.verifyInput({firstName: 'First 1', lastName: 'Last 1'});
 	},
-	'Name field can be created via the edit form': function (browser) {
-		browser.itemPage.section.form.section.nameList.section.nameField
+	'Name field can be filled via the edit form': function (browser) {
+		browser.itemPage.section.form.section.nameList.section.name
 			.fillInput({value: 'Name Field Test 2'});
 
 		browser.itemPage.section.form.section.nameList.section.fieldA
@@ -69,10 +70,13 @@ module.exports = {
 		browser.itemPage
 			.expect.element('@flashMessage').text.to.equal('Your changes have been saved.');
 
-		browser.itemPage.section.form.section.nameList.section.nameField
+		browser.itemPage.section.form.section.nameList.section.name
 			.verifyInput({value: 'Name Field Test 2'});
 
 		browser.itemPage.section.form.section.nameList.section.fieldA
 			.verifyInput({firstName: 'First 2', lastName: 'Last 2'});
+	},
+	// UNDO ANY STATE CHANGES -- THIS TEST SHOULD RUN LAST
+	'restoring test state': function (browser) {
 	},
 };
