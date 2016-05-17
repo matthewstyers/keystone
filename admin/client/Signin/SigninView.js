@@ -60,7 +60,11 @@ var SigninView = React.createClass({
 				return this.displayError('The email and password you entered are not valid.');
 			} else {
 				// Redirect to where we came from or to the default admin path
-				top.location.href = this.props.from ? this.props.from : Keystone.adminPath;
+				if (Keystone.redirect) {
+					top.location.href = Keystone.redirect;
+				} else {
+					top.location.href = this.props.from ? this.props.from : Keystone.adminPath;
+				}
 			}
 		});
 	},
@@ -103,7 +107,7 @@ var SigninView = React.createClass({
 					<h1 className="u-hidden-visually">{this.props.brand ? this.props.brand : 'Keystone'} Sign In </h1>
 					<div className="auth-box__inner">
 						<Brand
-							logo={this.props.isInvalid}
+							logo={this.props.logo}
 							brand={this.props.brand}
 						/>
 						<UserInfo

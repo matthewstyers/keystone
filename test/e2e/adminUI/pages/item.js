@@ -1,10 +1,21 @@
+var BooleanList = require('./lists/boolean');
+var CloudinaryImageList = require('./lists/cloudinaryImage.js');
+var CloudinaryImageMultipleList = require('./lists/cloudinaryImageMultiple.js');
 var CodeList = require('./lists/code');
 var ColorList = require('./lists/color');
 var DateList = require('./lists/date');
+var DateArrayList = require('./lists/dateArray');
 var DatetimeList = require('./lists/datetime');
+var EmailList = require('./lists/email');
 var HtmlList = require('./lists/html');
+var KeyList = require('./lists/key');
+var LocalFileList = require('./lists/localFile');
+var LocalFileMultipleList = require('./lists/localFileMultiple');
+var LocationList = require('./lists/location');
 var MarkdownList = require('./lists/markdown');
+var MoneyList = require('./lists/money');
 var NameList = require('./lists/name');
+var NumberList = require('./lists/number');
 var PasswordList = require('./lists/password');
 var SelectList = require('./lists/select');
 var TextList = require('./lists/text');
@@ -20,13 +31,24 @@ module.exports = {
 				//
 				// DEFINE ALL LISTS
 				//
+				booleanList: new BooleanList(),
+				cloudinaryimageList: new CloudinaryImageList(),
+				cloudinaryimagemultipleList: new CloudinaryImageMultipleList(),
 				codeList: new CodeList(),
 				colorList: new ColorList(),
 				dateList: new DateList(),
+				datearrayList: new DateArrayList(),
 				datetimeList: new DatetimeList(),
+				emailList: new EmailList(),
 				htmlList: new HtmlList(),
+				keyList: new KeyList(),
+				localfileList: new LocalFileList(),
+				localfilemultipleList: new LocalFileMultipleList(),
+				locationList: new LocationList(),
 				markdownList: new MarkdownList(),
+				moneyList: new MoneyList(),
 				nameList: new NameList(),
+				numberList: new NumberList(),
 				passwordList: new PasswordList(),
 				selectList: new SelectList(),
 				textList: new TextList(),
@@ -99,6 +121,17 @@ module.exports = {
 		//
 		// PAGE LEVEL COMMANDS
 		//
+		assertUI: function (config) {
+			var list = config.listName.toLowerCase() + 'List';
+			var tasks = [];
+			var form = this.section.form;
+			config.fields.forEach( function(field) {
+				var task = form.section[list].section[field]
+					.assertUI(config.args);
+				tasks.push(task);
+			});
+			return tasks;
+		},
 		new: function() {
 			return this
 				.click('@newItemButton');
