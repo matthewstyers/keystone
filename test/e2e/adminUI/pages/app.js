@@ -31,10 +31,11 @@ module.exports = {
 		cloudinaryimagemultipleListSubmenu: '.secondary-navbar [data-list-path="cloudinary-image-multiples"]',
 		codeListSubmenu: '.secondary-navbar [data-list-path="codes"]',
 		colorListSubmenu: '.secondary-navbar [data-list-path="colors"]',
-		dateListSubmenu: '.secondary-navbar [data-list-path="dates"]',
 		datearrayListSubmenu: '.secondary-navbar [data-list-path="date-arrays"]',
+		dateListSubmenu: '.secondary-navbar [data-list-path="dates"]',
 		datetimeListSubmenu: '.secondary-navbar [data-list-path="datetimes"]',
 		emailListSubmenu: '.secondary-navbar [data-list-path="emails"]',
+		geopointListSubmenu: '.secondary-navbar [data-list-path="geo-points"]',
 		htmlListSubmenu: '.secondary-navbar [data-list-path="htmls"]',
 		keyListSubmenu: '.secondary-navbar [data-list-path="keys"]',
 		localfileListSubmenu: '.secondary-navbar [data-list-path="local-files"]',
@@ -43,11 +44,13 @@ module.exports = {
 		markdownListSubmenu: '.secondary-navbar [data-list-path="markdowns"]',
 		moneyListSubmenu: '.secondary-navbar [data-list-path="money"]',
 		nameListSubmenu: '.secondary-navbar [data-list-path="names"]',
+		numberarrayListSubmenu: '.secondary-navbar [data-list-path="number-arrays"]',
 		numberListSubmenu: '.secondary-navbar [data-list-path="numbers"]',
 		passwordListSubmenu: '.secondary-navbar [data-list-path="passwords"]',
 		selectListSubmenu: '.secondary-navbar [data-list-path="selects"]',
-		textListSubmenu: '.secondary-navbar [data-list-path="texts"]',
 		textareaListSubmenu: '.secondary-navbar [data-list-path="textareas"]',
+		textarrayListSubmenu: '.secondary-navbar [data-list-path="text-arrays"]',
+		textListSubmenu: '.secondary-navbar [data-list-path="texts"]',
 		urlListSubmenu: '.secondary-navbar [data-list-path="urls"]',
 	},
 	commands: [{
@@ -88,7 +91,7 @@ module.exports = {
 		},
 		waitForListScreen: function() {
 			return this
-				.waitForElementVisible('@listScreen');
+				.waitForElementVisible('@listScreen', 20000);
 		},
 		waitForItemScreen: function() {
 			return this
