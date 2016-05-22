@@ -25,3 +25,4 @@ lib-cov
 
 docs/_dist
 *.tgz
+.github

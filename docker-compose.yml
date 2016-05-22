@@ -1,0 +1,13 @@
+# makes the container available to peer services
+# NOT available as a standalone service;
+keystone:
+  build: .
+  command: npm link
+  container_name: keystone
+  environment:
+    NODE_ENV: development
+    KEYSTONE_DEV: 'true'
+  restart: always
+  volumes:
+    - .:/app/keystone
+  working_dir: /app/keystone
