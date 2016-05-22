@@ -1,11 +1,12 @@
 var BooleanList = require('./lists/boolean');
-var CloudinaryImageList = require('./lists/cloudinaryImage.js');
-var CloudinaryImageMultipleList = require('./lists/cloudinaryImageMultiple.js');
+var CloudinaryImageList = require('./lists/cloudinaryImage');
+var CloudinaryImageMultipleList = require('./lists/cloudinaryImageMultiple');
 var CodeList = require('./lists/code');
 var ColorList = require('./lists/color');
-var DateList = require('./lists/date');
 var DateArrayList = require('./lists/dateArray');
+var DateList = require('./lists/date');
 var DatetimeList = require('./lists/datetime');
+var GeoPointList = require('./lists/geoPoint');
 var EmailList = require('./lists/email');
 var HtmlList = require('./lists/html');
 var KeyList = require('./lists/key');
@@ -15,11 +16,13 @@ var LocationList = require('./lists/location');
 var MarkdownList = require('./lists/markdown');
 var MoneyList = require('./lists/money');
 var NameList = require('./lists/name');
+var NumberArrayList = require('./lists/numberArray');
 var NumberList = require('./lists/number');
 var PasswordList = require('./lists/password');
 var SelectList = require('./lists/select');
-var TextList = require('./lists/text');
 var TextareaList = require('./lists/textarea');
+var TextArrayList = require('./lists/textArray');
+var TextList = require('./lists/text');
 var UrlList = require('./lists/url');
 var UserList = require('./lists/user');
 
@@ -36,10 +39,11 @@ module.exports = {
 				cloudinaryimagemultipleList: new CloudinaryImageMultipleList(),
 				codeList: new CodeList(),
 				colorList: new ColorList(),
-				dateList: new DateList(),
 				datearrayList: new DateArrayList(),
+				dateList: new DateList(),
 				datetimeList: new DatetimeList(),
 				emailList: new EmailList(),
+				geopointList: new GeoPointList(),
 				htmlList: new HtmlList(),
 				keyList: new KeyList(),
 				localfileList: new LocalFileList(),
@@ -48,11 +52,13 @@ module.exports = {
 				markdownList: new MarkdownList(),
 				moneyList: new MoneyList(),
 				nameList: new NameList(),
+				numberarrayList: new NumberArrayList(),
 				numberList: new NumberList(),
 				passwordList: new PasswordList(),
 				selectList: new SelectList(),
-				textList: new TextList(),
 				textareaList: new TextareaList(),
+				textarrayList: new TextArrayList(),
+				textList: new TextList(),
 				urlList: new UrlList(),
 				userList: new UserList(),
 			},
