@@ -25,4 +25,5 @@ lib-cov
 
 docs/_dist
 *.tgz
-.github
+.github/
+node_modules/
