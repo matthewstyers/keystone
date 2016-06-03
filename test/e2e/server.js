@@ -38,6 +38,8 @@ keystone.init({
 	'adminui custom styles': 'adminuiCustom/styles.less',
 
 	'cloudinary config': 'cloudinary://api_key:api_secret@cloud_name',
+	
+	'codemirror url path': '/keystone/js/lib/codemirror'
 });
 
 keystone.import('models');
@@ -68,12 +70,22 @@ keystone.set('nav', {
 		'numbers',
 		'number-arrays',
 		'passwords',
+		'relationships',
 		'selects',
 		'texts',
 		'text-arrays',
 		'textareas',
 		'urls',
 	],
+	'Miscs': [
+		'depends-ons',
+		'no-default-columns',
+		'inline-relationships',
+		'many-relationships',
+		'hidden-relationships',
+		'source-relationships',
+		'target-relationships',
+	]
 });
 
 function dropTestDatabase(done) {
@@ -96,7 +108,7 @@ function dropTestDatabase(done) {
 function checkKeystoneReady (done, results) {
 	console.log([moment().format('HH:mm:ss:SSS')] + ' e2e: checking if KeystoneJS ready for request');
 	request
-		.get('http://localhost:3000/keystone')
+		.get('http://' + keystone.get('host') + ':' + keystone.get('port') + '/keystone')
 		.end(done);
 }
 

@@ -19,12 +19,21 @@ var NameList = require('./lists/name');
 var NumberArrayList = require('./lists/numberArray');
 var NumberList = require('./lists/number');
 var PasswordList = require('./lists/password');
+var RelationshipList = require('./lists/relationship');
 var SelectList = require('./lists/select');
 var TextareaList = require('./lists/textarea');
 var TextArrayList = require('./lists/textArray');
 var TextList = require('./lists/text');
 var UrlList = require('./lists/url');
 var UserList = require('./lists/user');
+// MISC LISTS:
+var DependsOnList = require('./lists/misc/dependsOn');
+var HiddenRelationshipList = require('./lists/misc/hiddenRelationship');
+var InlineRelationshipList = require('./lists/misc/inlineRelationship');
+var ManyRelationshipList = require('./lists/misc/manyRelationship');
+var NoDefaultColumnList = require('./lists/misc/noDefaultColumns');
+var SourceRelationshipList = require('./lists/misc/sourceRelationship');
+var TargetRelationshipList = require('./lists/misc/targetRelationship');
 
 module.exports = {
 	sections: {
@@ -55,12 +64,23 @@ module.exports = {
 				numberarrayList: new NumberArrayList(),
 				numberList: new NumberList(),
 				passwordList: new PasswordList(),
+				relationshipList: new RelationshipList(),
 				selectList: new SelectList(),
 				textareaList: new TextareaList(),
 				textarrayList: new TextArrayList(),
 				textList: new TextList(),
 				urlList: new UrlList(),
 				userList: new UserList(),
+				//
+				// MISC LISTS
+				//
+				dependsonList: new DependsOnList(),
+				hiddenrelationshipList: new HiddenRelationshipList(),
+				inlinerelationshipList: new InlineRelationshipList(),
+				manyrelationshipList: new ManyRelationshipList(),
+				nodefaultcolumnList: new NoDefaultColumnList(),
+				sourcerelationshipList: new SourceRelationshipList(),
+				targetrelationshipList: new TargetRelationshipList(),
 			},
 			elements: {
 				//
