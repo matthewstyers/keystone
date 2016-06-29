@@ -159,6 +159,10 @@ module.exports = {
 			});
 			return tasks;
 		},
+		back: function() {
+			return this
+				.click('listBreadcrumb');
+		},
 		new: function() {
 			return this
 				.click('@newItemButton');
