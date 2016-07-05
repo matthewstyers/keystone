@@ -5,6 +5,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import assign from 'object-assign';
 import AlertMessages from './AlertMessages';
 import { Fields } from 'FieldTypes';
 import InvalidFieldType from './InvalidFieldType';
@@ -18,24 +19,20 @@ const CreateForm = React.createClass({
 		list: React.PropTypes.object,
 		onCancel: React.PropTypes.func,
 		onCreate: React.PropTypes.func,
-		values: React.PropTypes.object,
 	},
 	getDefaultProps () {
 		return {
 			err: null,
-			values: {},
 			isOpen: false,
 		};
 	},
 	getInitialState () {
-		var values = Object.assign({}, this.props.values);
-
 		// Set the field values to their default values when first rendering the
 		// form. (If they have a default value, that is)
+		var values = {};
 		Object.keys(this.props.list.fields).forEach(key => {
 			var field = this.props.list.fields[key];
-
-			if (!values[field.path]) {
+			if (field.defaultValue) {
 				values[field.path] = field.defaultValue;
 			}
 		});
@@ -64,7 +61,7 @@ const CreateForm = React.createClass({
 	},
 	// Handle input change events
 	handleChange (event) {
-		var values = Object.assign({}, this.state.values);
+		var values = assign({}, this.state.values);
 		values[event.path] = event.value;
 		this.setState({
 			values: values,
@@ -72,7 +69,7 @@ const CreateForm = React.createClass({
 	},
 	// Set the props of a field
 	getFieldProps (field) {
-		var props = Object.assign({}, field);
+		var props = assign({}, field);
 		props.value = this.state.values[field.path];
 		props.values = this.state.values;
 		props.onChange = this.handleChange;
@@ -163,16 +160,6 @@ const CreateForm = React.createClass({
 				onSubmit={this.submitForm}
 				className="create-form"
 			>
-				{/*
-					TODO Figure out if we still need this hidden inputs now that
-					we use the API for creation
-				*/}
-				<input type="hidden" name="action" value="create" />
-				<input
-					type="hidden"
-					name={Keystone.csrf.key}
-					value={Keystone.csrf.value}
-				/>
 				<Modal.Header
 					text={'Create a new ' + list.singular}
 					onClose={this.props.onCancel}

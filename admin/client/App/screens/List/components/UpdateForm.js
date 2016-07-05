@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Select from 'react-select';
+import assign from 'object-assign';
 import { Fields } from 'FieldTypes';
 import InvalidFieldType from '../../../shared/InvalidFieldType';
 import { plural } from '../../../../utils/string';
@@ -39,7 +40,7 @@ var UpdateForm = React.createClass({
 		return Object.keys(fields).map(key => ({ value: fields[key].path, label: fields[key].label }));
 	},
 	getFieldProps (field) {
-		var props = Object.assign({}, field);
+		var props = assign({}, field);
 		props.value = this.state.fields[field.path];
 		props.values = this.state.fields;
 		props.onChange = this.handleChange;
@@ -102,9 +103,7 @@ var UpdateForm = React.createClass({
 		const formAction = `${Keystone.adminPath}/${list.path}`;
 
 		return (
-			<Form type="horizontal" encType="multipart/form-data" method="post" action={formAction} noValidate="true">
-				<input type="hidden" name="action" value="update" />
-				<input type="hidden" name={Keystone.csrf.key} value={Keystone.csrf.value} />
+			<Form type="horizontal" action={formAction} noValidate="true">
 				<Modal.Header text={'Update ' + itemCount} onClose={this.handleClose} showCloseButton />
 				<Modal.Body>
 					<Select ref="initialFocusTarget" onChange={this.updateOptions} options={this.getOptions()} value={this.state.fields} key="field-select" multi />
