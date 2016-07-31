@@ -1,79 +1,73 @@
-import React, { Component, PropTypes } from 'react';
-const classNames = require('classnames');
-const blacklist = require('blacklist');
+import { StyleSheet, css } from 'aphrodite/no-important';
+import React, { PropTypes } from 'react';
+import styles from './styles';
 
-const BUTTON_SIZES = ['lg', 'sm', 'xs'];
-
-const BUTTON_TYPES = [
-	'default',
-	'default-primary',
-	'default-success',
-	'default-warning',
-	'default-danger',
-	'hollow-primary',
-	'hollow-success',
-	'hollow-warning',
-	'hollow-danger',
-	'primary',
-	'success',
-	'warning',
-	'danger',
-	'link',
-	'link-text',
-	'link-primary',
-	'link-success',
-	'link-warning',
-	'link-danger',
-	'link-cancel',
-	'link-delete',
-];
-
-class Button extends Component {
-	getDefaultProps () {
-		return {
-			type: 'default',
-		};
+const commonClasses = StyleSheet.create(styles.common);
+const stylesheetCache = {};
+function getStyleSheet (variant, color) {
+	const cacheKey = `${variant}-${color}`;
+	if (!stylesheetCache[cacheKey]) {
+		const variantStyles = styles[variant](color);
+		stylesheetCache[cacheKey] = StyleSheet.create(variantStyles);
 	}
-	render () {
-		// classes
-		const componentClass = classNames(
-			'Button',
-			'Button--' + this.props.type,
-			(this.props.size ? 'Button--' + this.props.size : null),
-			{
-				'Button--block': this.props.block,
-				'is-active': this.props.isActive,
-			},
-			this.props.className
-		);
+	return stylesheetCache[cacheKey];
+}
+const truthy = i => i;
+function cssClassNames (arr) {
+	return css.apply(undefined, arr.filter(truthy));
+}
 
-		// props
-		const props = blacklist(this.props, 'type', 'size', 'component', 'className');
-		props.className = componentClass;
+const BUTTON_SIZES = ['large', 'medium', 'small', 'xsmall'];
+const BUTTON_VARIANTS = ['fill', 'hollow', 'link'];
+const BUTTON_COLORS = ['default', 'primary', 'success', 'warning', 'danger', 'cancel', 'delete'];
 
-		if (this.props.component) {
-			return React.cloneElement(this.props.component, props);
-		}
-
-		let tag = 'button';
-		props.type = this.props.submit ? 'submit' : 'button';
-
-		if (props.href) {
-			tag = 'a';
-			delete props.type;
-		}
-
-		return React.createElement(tag, props, this.props.children);
+function Button ({
+	color,
+	component,
+	isActive,
+	isBlock,
+	isDisabled,
+	size,
+	variant,
+	...props,
+}) {
+	// get the styles
+	const variantClasses = getStyleSheet(variant, color);
+	props.className = cssClassNames([
+		commonClasses.base,
+		commonClasses[size],
+		variantClasses.base,
+		isActive ? variantClasses.active : null,
+		isBlock ? commonClasses.block : null,
+		isDisabled ? commonClasses.disabled : null,
+	]);
+	// return an anchor or button
+	if (!component) {
+		component = props.href ? 'a' : 'button';
 	}
+	// Ensure buttons don't submit by default
+	if (component === 'button' && !props.type) {
+		props.type = 'button';
+	}
+	if (isDisabled) {
+		props.disabled = 'disabled';
+	}
+	return React.createElement(component, props);
 };
 
 Button.propTypes = {
-	block: PropTypes.bool,
-	className: PropTypes.string,
+	color: PropTypes.oneOf(BUTTON_COLORS),
 	component: PropTypes.element,
 	href: PropTypes.string,
 	isActive: PropTypes.bool,
+	isBlock: PropTypes.bool,
+	isDisabled: PropTypes.bool,
 	size: PropTypes.oneOf(BUTTON_SIZES),
-	submit: PropTypes.bool,
-	type: PropTypes.oneOf(BUTTON_TYPES),
+	variant: PropTypes.oneOf(BUTTON_VARIANTS),
 };
+Button.defaultProps = {
+	color: 'default',
+	variant: 'fill',
+};
+
+module.exports = Button;
