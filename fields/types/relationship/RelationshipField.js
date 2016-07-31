@@ -1,10 +1,11 @@
+import _ from 'lodash';
+import { Button, InputGroup } from 'elemental';
+import { listsByKey } from '../../../admin/client/utils/lists';
 import async from 'async';
 import Field from '../Field';
-import { listsByKey } from '../../../admin/client/utils/lists';
 import React from 'react';
 import Select from 'react-select';
 import xhr from 'xhr';
-import { Button, InputGroup } from 'elemental';
 
 function compareValues (current, next) {
 	const currentLength = current ? current.length : 0;
