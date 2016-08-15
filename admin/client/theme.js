@@ -11,8 +11,8 @@ const { blend, fade, lighten } = require('./utils/color');
 theme.breakpointNumeric = {
 	mobile:           480,
 	tabletPortrait:   768,
-	tabletLandscape:  1024,
-	desktop:          1280,
+	tabletLandscape:  992,
+	desktop:          1200,
 };
 theme.breakpoint = {
 	tabletPortraitMin:  (theme.breakpointNumeric.mobile + 1) + 'px',
@@ -24,6 +24,17 @@ theme.breakpoint = {
 	tabletPortraitMax:   theme.breakpointNumeric.tabletPortrait + 'px',
 	tabletLandscapeMax:  theme.breakpointNumeric.tabletLandscape + 'px',
 	desktopMax:          theme.breakpointNumeric.desktop + 'px',
+};
+
+// container
+
+theme.container = {
+	gutter: 20,
+	size: {
+		small:  750,
+		medium: 970,
+		large: 1170,
+	},
 };
 
 // color
@@ -93,6 +104,8 @@ theme.spacing = {
 // button
 
 theme.button = {
+	borderRadius: theme.borderRadius.default,
+	borderWidth: 1,
 	font: {
 		weight: 500,
 	},
@@ -183,6 +196,38 @@ theme.input = {
 	boxShadow: 'inset 0 1px 1px rgba(0, 0, 0, 0.075)',
 	boxShadowFocus: `inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px ${fade(theme.color.info, 10)}`,
 	paddingHorizontal: '.75em',
+};
+
+// alert
+
+theme.alert = {
+	padding: '0.75em  1em',
+	margin: '0 0 1em',
+	borderWidth: 1,
+	borderRadius: theme.borderRadius.default,
+
+	color: {
+		danger: {
+			background: fade(theme.color.danger, 10),
+			border: fade(theme.color.danger, 10),
+			text: theme.color.danger,
+		},
+		info: {
+			background: fade(theme.color.primary, 10),
+			border: fade(theme.color.primary, 10),
+			text: theme.color.primary,
+		},
+		success: {
+			background: fade(theme.color.success, 10),
+			border: fade(theme.color.success, 10),
+			text: theme.color.success,
+		},
+		warning: {
+			background: fade(theme.color.warning, 10),
+			border: fade(theme.color.warning, 10),
+			text: theme.color.warning,
+		},
+	},
 };
 
 // glyph

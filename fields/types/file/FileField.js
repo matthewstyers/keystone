@@ -4,12 +4,12 @@ import { Button, FormField, FormInput, FormNote } from 'elemental';
 import FileChangeMessage from '../../components/FileChangeMessage';
 import HiddenFileInput from '../../components/HiddenFileInput';
 
-let uploadInc = 0;
+let uploadInc = 1000;
 
 const buildInitialState = (props) => ({
 	action: null,
 	removeExisting: false,
-	uploadFieldPath: `${props.path}-${++uploadInc}`,
+	uploadFieldPath: `File-${props.path}-${++uploadInc}`,
 	userSelectedFile: null,
 });
 
@@ -35,6 +35,12 @@ module.exports = Field.create({
 	},
 	shouldCollapse () {
 		return this.props.collapse && !this.hasExisting();
+	},
+	componentWillUpdate (nextProps) {
+		// Show the new filename when it's finished uploading
+		if (this.props.value.filename !== nextProps.value.filename) {
+			this.setState(buildInitialState(nextProps));
+		}
 	},
 
 	// ==============================
@@ -71,7 +77,7 @@ module.exports = Field.create({
 		var state = {};
 
 		if (this.state.userSelectedFile) {
-			state.userSelectedFile = null;
+			state = buildInitialState(this.props);
 		} else if (this.hasExisting()) {
 			state.removeExisting = true;
 
@@ -100,15 +106,16 @@ module.exports = Field.create({
 	// RENDERERS
 	// ==============================
 
-	renderFileNameAndOptionalMessage (showChangeMessage = false) {
+	renderFileNameAndChangeMessage () {
+		const href = this.props.value ? this.props.value.url : undefined;
 		return (
 			<div>
 				{(this.hasFile() && !this.state.removeExisting) ? (
-					<FileChangeMessage>
+					<FileChangeMessage href={href} target="_blank">
 						{this.getFilename()}
 					</FileChangeMessage>
 				) : null}
-				{showChangeMessage && this.renderChangeMessage()}
+				{this.renderChangeMessage()}
 			</div>
 		);
 	},
@@ -159,7 +166,7 @@ module.exports = Field.create({
 				: (this.state.action === 'delete' ? 'remove' : '');
 			return (
 				<input
-					name={this.props.path}
+					name={this.getInputName(this.props.path)}
 					type="hidden"
 					value={value}
 				/>
@@ -183,9 +190,10 @@ module.exports = Field.create({
 				<FormField label={this.props.label} htmlFor={this.props.path}>
 					{this.shouldRenderField() ? (
 						<div>
-							{this.hasFile() && this.renderFileNameAndOptionalMessage(true)}
+							{this.hasFile() && this.renderFileNameAndChangeMessage()}
 							{buttons}
 							<HiddenFileInput
+								key={this.state.uploadFieldPath}
 								name={this.state.uploadFieldPath}
 								onChange={this.handleFileChange}
 								ref="fileInput"
@@ -195,7 +203,7 @@ module.exports = Field.create({
 					) : (
 						<div>
 							{this.hasFile()
-								? this.renderFileNameAndOptionalMessage()
+								? this.renderFileNameAndChangeMessage()
 								: <FormInput noedit>no file</FormInput>}
 						</div>
 					)}
