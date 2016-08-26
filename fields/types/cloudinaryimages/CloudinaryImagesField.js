@@ -30,6 +30,7 @@ module.exports = Field.create({
 	displayName: 'CloudinaryImagesField',
 	statics: {
 		type: 'CloudinaryImages',
+		getDefaultValue: () => ([]),
 	},
 	getInitialState () {
 		return this.buildInitialState(this.props);
@@ -272,7 +273,7 @@ module.exports = Field.create({
 
 		return (
 			<div style={toolbarStyles}>
-				<Button onClick={this.triggerFileBrowser} style={uploadButtonStyles}>
+				<Button onClick={this.triggerFileBrowser} style={uploadButtonStyles} data-e2e-upload-button="true">
 					Upload Images
 				</Button>
 				{this.hasFiles() && (

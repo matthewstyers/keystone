@@ -59,6 +59,7 @@ var EditForm = React.createClass({
 			confirmationDialog: null,
 			loading: false,
 			lastValues: null, // used for resetting
+			focusFirstField: true,
 		};
 	},
 	getFieldProps (field) {
@@ -89,7 +90,7 @@ var EditForm = React.createClass({
 		const confirmationDialog = (
 			<ConfirmationDialog
 				isOpen
-				body={`Reset your changes to <strong>${this.props.data.name}</strong>?`}
+				body={<p>Reset your changes to <strong>{this.props.data.name}</strong>?</p>}
 				confirmationLabel="Reset"
 				onCancel={this.removeConfirmationDialog}
 				onConfirmation={this.handleReset}
@@ -108,7 +109,7 @@ var EditForm = React.createClass({
 		const confirmationDialog = (
 			<ConfirmationDialog
 				isOpen
-				body={`Are you sure you want to delete <strong>${this.props.data.name}?</strong><br /><br />This cannot be undone.`}
+				body={<p>Are you sure you want to delete <strong>{this.props.data.name}?</strong><br /><br />This cannot be undone.</p>}
 				confirmationLabel="Delete"
 				onCancel={this.removeConfirmationDialog}
 				onConfirmation={this.handleDelete}
@@ -205,16 +206,17 @@ var EditForm = React.createClass({
 	},
 	renderNameField () {
 		var nameField = this.props.list.nameField;
-		var nameIsEditable = this.props.list.nameIsEditable;
+		var nameFieldIsFormHeader = this.props.list.nameFieldIsFormHeader;
 		var wrapNameField = field => (
 			<div className="EditForm__name-field">
 				{field}
 			</div>
 		);
-		if (nameIsEditable) {
+		if (nameFieldIsFormHeader) {
 			var nameFieldProps = this.getFieldProps(nameField);
 			nameFieldProps.label = null;
 			nameFieldProps.size = 'full';
+			nameFieldProps.autoFocus = true;
 			nameFieldProps.inputProps = {
 				className: 'item-name-field',
 				placeholder: nameField.label,
@@ -232,7 +234,18 @@ var EditForm = React.createClass({
 	renderFormElements () {
 		var headings = 0;
 
-		return this.props.list.uiElements.map((el) => {
+		return this.props.list.uiElements.map((el, index) => {
+			// Don't render the name field if it is the header since it'll be rendered in BIG above
+			// the list. (see renderNameField method, this is the reverse check of the one it does)
+			if (this.props.list.nameField && el.field === this.props.list.nameField.path && this.props.list.nameFieldIsFormHeader) {
+				if (this.state.focusFirstField) {
+					this.setState({
+						focusFirstField: false,
+					});
+				}
+				return;
+			}
+
 			if (el.type === 'heading') {
 				headings++;
 				el.options.values = this.state.values;
@@ -253,6 +266,10 @@ var EditForm = React.createClass({
 					});
 				}
 				props.key = field.path;
+				if (index === 0 && this.state.focusFirstField) {
+					console.log(`FOCUS ${field.path}`);
+					props.autoFocus = true;
+				}
 				return React.createElement(Fields[field.type], props);
 			}
 		}, this);
@@ -272,17 +289,18 @@ var EditForm = React.createClass({
 						disabled={loading}
 						loading={loading}
 						onClick={this.updateItem}
+						data-button="update"
 					>
 						{loadingButtonText}
 					</LoadingButton>
-					<Button disabled={loading} onClick={this.confirmReset} variant="link" color="cancel">
+					<Button disabled={loading} onClick={this.confirmReset} variant="link" color="cancel" data-button="reset">
 						<ResponsiveText
 							hiddenXS="reset changes"
 							visibleXS="reset"
 						/>
 					</Button>
 					{!this.props.list.nodelete && (
-						<Button disabled={loading} onClick={this.confirmDelete} variant="link" color="delete" style={styles.deleteButton}>
+						<Button disabled={loading} onClick={this.confirmDelete} variant="link" color="delete" style={styles.deleteButton} data-button="delete">
 							<ResponsiveText
 								hiddenXS={`delete ${this.props.list.singular.toLowerCase()}`}
 								visibleXS="delete"
@@ -294,6 +312,11 @@ var EditForm = React.createClass({
 		);
 	},
 	renderTrackingMeta () {
+		// TODO: These fields are visible now, so we don't want this. We may revisit
+		// it when we have more granular control over hiding fields in certain
+		// contexts, so I'm leaving this code here as a reference for now - JW
+		if (true) return null; // if (true) prevents unreachable code linter errpr
+
 		if (!this.props.list.tracking) return null;
 
 		var elements = [];
