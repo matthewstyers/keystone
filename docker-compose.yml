@@ -4,4 +4,5 @@ version: '2'
 services:
   keystone:
     build: .
+    image: styers/keystone:dev
     container_name: keystone
