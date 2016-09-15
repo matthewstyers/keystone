@@ -17,12 +17,12 @@ const truthy = (i) => i;
  *
  * @return {Array}       The columns
  */
-function getColumns (list) {
+function getColumns(list) {
 	return list.uiElements.map((col) => {
 		if (col.type === 'heading') {
 			return { type: 'heading', content: col.content };
 		} else {
-			var field = list.fields[col.field];
+			const field = list.fields[col.field];
 			return field ? { type: 'field', field: field, title: field.label, path: field.path } : null;
 		}
 	}).filter(truthy);
@@ -35,13 +35,13 @@ function getColumns (list) {
  *
  * @return {Object}            The corrected filters, keyed by path
  */
-function getFilters (filterArray) {
-	var filters = {};
+function getFilters(filterArray) {
+	const filters = {};
 	filterArray.forEach((filter) => {
 		filters[filter.field.path] = filter.value;
 	});
 	return filters;
-};
+}
 
 /**
  * Get the sorting string for the URI
@@ -50,17 +50,17 @@ function getFilters (filterArray) {
  *
  * @return {String}           All the sorting queries we want as a string
  */
-function getSortString (sort) {
+function getSortString(sort) {
 	return sort.paths.map(i => {
 		// If we want to sort inverted, we prefix a "-" before the sort path
 		return i.invert ? '-' + i.path : i.path;
 	}).filter(truthy).join(',');
-};
+}
 
 /**
  * Build a query string from a bunch of options
  */
-function buildQueryString (options) {
+function buildQueryString(options) {
 	const query = {};
 	if (options.search) query.search = options.search;
 	if (options.filters.length) query.filters = JSON.stringify(getFilters(options.filters));
@@ -70,14 +70,14 @@ function buildQueryString (options) {
 	if (options.sort) query.sort = getSortString(options.sort);
 	query.expandRelationshipFields = true;
 	return '?' + qs.stringify(query);
-};
+}
 
 /**
  * The main list helper class
  *
  * @param {Object} options
  */
-const List = function (options) {
+const List = function(options) {
 	// TODO these options are possibly unused
 	assign(this, options);
 	this.columns = getColumns(this);
@@ -91,7 +91,7 @@ const List = function (options) {
  * @param  {FormData} formData The submitted form data
  * @param  {Function} callback Called after the API call
  */
-List.prototype.createItem = function (formData, callback) {
+List.prototype.createItem = function(formData, callback) {
 	xhr({
 		url: `${Keystone.adminPath}/api/${this.path}/create`,
 		responseType: 'json',
@@ -119,7 +119,7 @@ List.prototype.createItem = function (formData, callback) {
  * @param  {FormData} formData The submitted form data
  * @param  {Function} callback Called after the API call
  */
-List.prototype.updateItem = function (id, formData, callback) {
+List.prototype.updateItem = function(id, formData, callback) {
 	xhr({
 		url: `${Keystone.adminPath}/api/${this.path}/${id}`,
 		responseType: 'json',
@@ -136,12 +136,12 @@ List.prototype.updateItem = function (id, formData, callback) {
 	});
 };
 
-List.prototype.expandColumns = function (input) {
+List.prototype.expandColumns = function(input) {
 	let nameIncluded = false;
 	const cols = listToArray(input).map(i => {
 		const split = i.split('|');
 		let path = split[0];
-		let width = split[1];
+		const width = split[1];
 		if (path === '__name__') {
 			path = this.namePath;
 		}
@@ -178,7 +178,7 @@ List.prototype.expandColumns = function (input) {
 	return cols;
 };
 
-List.prototype.expandSort = function (input) {
+List.prototype.expandSort = function(input) {
 	const sort = {
 		rawInput: input || this.defaultSort,
 		isDefaultSort: false,
@@ -221,7 +221,7 @@ List.prototype.expandSort = function (input) {
  * @param  {Object}   options
  * @param  {Function} callback
  */
-List.prototype.loadItem = function (itemId, options, callback) {
+List.prototype.loadItem = function(itemId, options, callback) {
 	if (arguments.length === 2 && typeof options === 'function') {
 		callback = options;
 		options = null;
@@ -250,7 +250,7 @@ List.prototype.loadItem = function (itemId, options, callback) {
  * @param  {Object}   options
  * @param  {Function} callback
  */
-List.prototype.loadItems = function (options, callback) {
+List.prototype.loadItems = function(options, callback) {
 	const url = Keystone.adminPath + '/api/' + this.path + buildQueryString(options);
 	xhr({
 		url: url,
@@ -274,7 +274,7 @@ List.prototype.loadItems = function (options, callback) {
  *
  * @return {String}         The download URL
  */
-List.prototype.getDownloadURL = function (options) {
+List.prototype.getDownloadURL = function(options) {
 	const url = Keystone.adminPath + '/api/' + this.path;
 	const parts = [];
 	if (options.format !== 'json') {
@@ -294,7 +294,7 @@ List.prototype.getDownloadURL = function (options) {
  * @param  {String}   itemId   The id of the item we want to delete
  * @param  {Function} callback
  */
-List.prototype.deleteItem = function (itemId, callback) {
+List.prototype.deleteItem = function(itemId, callback) {
 	this.deleteItems([itemId], callback);
 };
 
@@ -304,7 +304,7 @@ List.prototype.deleteItem = function (itemId, callback) {
  * @param  {Array}   itemIds  An array of ids of items we want to delete
  * @param  {Function} callback
  */
-List.prototype.deleteItems = function (itemIds, callback) {
+List.prototype.deleteItems = function(itemIds, callback) {
 	const url = Keystone.adminPath + '/api/' + this.path + '/delete';
 	xhr({
 		url: url,
@@ -324,7 +324,7 @@ List.prototype.deleteItems = function (itemIds, callback) {
 	});
 };
 
-List.prototype.reorderItems = function (item, oldSortOrder, newSortOrder, pageOptions, callback) {
+List.prototype.reorderItems = function(item, oldSortOrder, newSortOrder, pageOptions, callback) {
 	const url = Keystone.adminPath + '/api/' + this.path + '/' + item.id + '/sortOrder/' + oldSortOrder + '/' + newSortOrder + '/' + buildQueryString(pageOptions);
 	xhr({
 		url: url,

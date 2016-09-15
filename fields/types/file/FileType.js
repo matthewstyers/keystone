@@ -1,13 +1,13 @@
-var FieldType = require('../Type');
-var util = require('util');
-var utils = require('keystone-utils');
+const FieldType = require('../Type');
+const util = require('util');
+const utils = require('keystone-utils');
 
-var debug = require('debug')('keystone:fields:file');
+const debug = require('debug')('keystone:fields:file');
 
 /**
  * File FieldType Constructor
  */
-function file (list, path, options) {
+function file(list, path, options) {
 	this._underscoreMethods = ['format', 'upload', 'remove', 'reset'];
 	this._fixedSize = 'full';
 
@@ -24,17 +24,16 @@ util.inherits(file, FieldType);
 /**
  * Registers the field on the List's Mongoose Schema.
  */
-file.prototype.addToSchema = function (schema) {
-
-	var field = this;
+file.prototype.addToSchema = function(schema) {
+	const field = this;
 
 	this.paths = {};
 	// add field paths from the storage schema
-	Object.keys(this.storage.schema).forEach(function (path) {
+	Object.keys(this.storage.schema).forEach(function(path) {
 		field.paths[path] = field.path + '.' + path;
 	});
 
-	var schemaPaths = this._path.addTo({}, this.storage.schema);
+	const schemaPaths = this._path.addTo({}, this.storage.schema);
 	schema.add(schemaPaths);
 
 	this.bindUnderscoreMethods();
@@ -43,11 +42,11 @@ file.prototype.addToSchema = function (schema) {
 /**
  * Uploads a new file
  */
-file.prototype.upload = function (item, file, callback) {
-	var field = this;
+file.prototype.upload = function(item, file, callback) {
+	const field = this;
 	// TODO; Validate there is actuall a file to upload
 	debug('[%s.%s] Uploading file for item %s:', this.list.key, this.path, item.id, file);
-	this.storage.uploadFile(file, function (err, result) {
+	this.storage.uploadFile(file, function(err, result) {
 		if (err) return callback(err);
 		debug('[%s.%s] Uploaded file for item %s with result:', field.list.key, field.path, item.id, result);
 		item.set(field.path, result);
@@ -58,9 +57,9 @@ file.prototype.upload = function (item, file, callback) {
 /**
  * Resets the field value
  */
-file.prototype.reset = function (item) {
-	var value = {};
-	Object.keys(this.storage.schema).forEach(function (path) {
+file.prototype.reset = function(item) {
+	const value = {};
+	Object.keys(this.storage.schema).forEach(function(path) {
 		value[path] = null;
 	});
 	item.set(this.path, value);
@@ -70,7 +69,7 @@ file.prototype.reset = function (item) {
  * Deletes the stored file and resets the field value
  */
 // TODO: Should we accept a callback here? Seems like a good idea.
-file.prototype.remove = function (item) {
+file.prototype.remove = function(item) {
 	this.storage.removeFile(item.get(this.path));
 	this.reset();
 };
@@ -78,8 +77,8 @@ file.prototype.remove = function (item) {
 /**
  * Formats the field value
  */
-file.prototype.format = function (item) {
-	var value = item.get(this.path);
+file.prototype.format = function(item) {
+	const value = item.get(this.path);
 	if (value) return value.filename || '';
 	return '';
 };
@@ -87,17 +86,17 @@ file.prototype.format = function (item) {
 /**
  * Detects whether the field has been modified
  */
-file.prototype.isModified = function (item) {
-	var modified = false;
-	var paths = this.paths;
-	Object.keys(this.storageSchema).forEach(function (path) {
+file.prototype.isModified = function(item) {
+	let modified = false;
+	const paths = this.paths;
+	Object.keys(this.storageSchema).forEach(function(path) {
 		if (item.isModified(paths[path])) modified = true;
 	});
 	return modified;
 };
 
 
-function validateInput (value) {
+function validateInput(value) {
 	// undefined, null and empty values are always valid
 	if (value === undefined || value === null || value === '') return true;
 	// If a string is provided, check it is an upload or delete instruction
@@ -111,10 +110,10 @@ function validateInput (value) {
 /**
  * Validates that a value for this field has been provided in a data object
  */
-file.prototype.validateInput = function (data, callback) {
-	var value = this.getValueFromData(data);
+file.prototype.validateInput = function(data, callback) {
+	const value = this.getValueFromData(data);
 	debug('[%s.%s] Validating input: ', this.list.key, this.path, value);
-	var result = validateInput(value);
+	const result = validateInput(value);
 	debug('[%s.%s] Validation result: ', this.list.key, this.path, result);
 	utils.defer(callback, result);
 };
@@ -122,11 +121,11 @@ file.prototype.validateInput = function (data, callback) {
 /**
  * Validates that input has been provided
  */
-file.prototype.validateRequiredInput = function (item, data, callback) {
+file.prototype.validateRequiredInput = function(item, data, callback) {
 	// TODO: We need to also get the `files` argument, so we can check for
 	// uploaded files. without it, this will return false negatives so we
 	// can't actually validate required input at the moment.
-	var result = true;
+	const result = true;
 	// var value = this.getValueFromData(data);
 	// debug('[%s.%s] Validating required input: ', this.list.key, this.path, value);
 	// TODO: Need to actually check a dynamic path based on the adapter
@@ -141,7 +140,7 @@ file.prototype.validateRequiredInput = function (item, data, callback) {
  * TODO: It is not possible to remove an existing value and upload a new fiel
  * in the same action, this should be supported
  */
-file.prototype.updateItem = function (item, data, files, callback) {
+file.prototype.updateItem = function(item, data, files, callback) {
 	// Process arguments
 	if (typeof files === 'function') {
 		callback = files;
@@ -152,8 +151,8 @@ file.prototype.updateItem = function (item, data, files, callback) {
 	}
 
 	// Prepare values
-	var value = this.getValueFromData(data);
-	var uploadedFile;
+	let value = this.getValueFromData(data);
+	let uploadedFile;
 
 	// Providing the string "remove" removes the file and resets the field
 	if (value === 'remove') {

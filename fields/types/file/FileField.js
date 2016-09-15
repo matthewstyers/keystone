@@ -40,15 +40,15 @@ module.exports = Field.create({
 		type: 'File',
 		getDefaultValue: () => ({}),
 	},
-	getInitialState () {
+	getInitialState() {
 		return buildInitialState(this.props);
 	},
-	shouldCollapse () {
+	shouldCollapse() {
 		return this.props.collapse && !this.hasExisting();
 	},
-	componentWillUpdate (nextProps) {
+	componentWillUpdate(nextProps) {
 		// Show the new filename when it's finished uploading
-		if (this.props.value.filename !== nextProps.value.filename) {
+		if (this.props.value && this.props.value.filename !== nextProps.value.filename) {
 			this.setState(buildInitialState(nextProps));
 		}
 	},
@@ -57,13 +57,13 @@ module.exports = Field.create({
 	// HELPERS
 	// ==============================
 
-	hasFile () {
+	hasFile() {
 		return this.hasExisting() || !!this.state.userSelectedFile;
 	},
-	hasExisting () {
+	hasExisting() {
 		return this.props.value && !!this.props.value.filename;
 	},
-	getFilename () {
+	getFilename() {
 		return this.state.userSelectedFile
 			? this.state.userSelectedFile.name
 			: this.props.value.filename;
@@ -73,18 +73,18 @@ module.exports = Field.create({
 	// METHODS
 	// ==============================
 
-	triggerFileBrowser () {
+	triggerFileBrowser() {
 		this.refs.fileInput.clickDomNode();
 	},
-	handleFileChange (event) {
+	handleFileChange(event) {
 		const userSelectedFile = event.target.files[0];
 
 		this.setState({
 			userSelectedFile: userSelectedFile,
 		});
 	},
-	handleRemove (e) {
-		var state = {};
+	handleRemove(e) {
+		let state = {};
 
 		if (this.state.userSelectedFile) {
 			state = buildInitialState(this.props);
@@ -108,7 +108,7 @@ module.exports = Field.create({
 
 		this.setState(state);
 	},
-	undoRemove () {
+	undoRemove() {
 		this.setState(buildInitialState(this.props));
 	},
 
@@ -116,7 +116,7 @@ module.exports = Field.create({
 	// RENDERERS
 	// ==============================
 
-	renderFileNameAndChangeMessage () {
+	renderFileNameAndChangeMessage() {
 		const href = this.props.value ? this.props.value.url : undefined;
 		return (
 			<div>
@@ -129,7 +129,7 @@ module.exports = Field.create({
 			</div>
 		);
 	},
-	renderChangeMessage () {
+	renderChangeMessage() {
 		if (this.state.userSelectedFile) {
 			return (
 				<FileChangeMessage type="success">
@@ -146,7 +146,7 @@ module.exports = Field.create({
 			return null;
 		}
 	},
-	renderClearButton () {
+	renderClearButton() {
 		if (this.state.removeExisting) {
 			return (
 				<Button type="link" onClick={this.undoRemove}>
@@ -154,7 +154,7 @@ module.exports = Field.create({
 				</Button>
 			);
 		} else {
-			var clearText;
+			let clearText;
 			if (this.state.userSelectedFile) {
 				clearText = 'Cancel Upload';
 			} else {
@@ -167,7 +167,7 @@ module.exports = Field.create({
 			);
 		}
 	},
-	renderActionInput () {
+	renderActionInput() {
 		// If the user has selected a file for uploading, we need to point at
 		// the upload field. If the file is being deleted, we submit that.
 		if (this.state.userSelectedFile || this.state.action) {
@@ -185,7 +185,7 @@ module.exports = Field.create({
 			return null;
 		}
 	},
-	renderUI () {
+	renderUI() {
 		const buttons = (
 			<div style={this.hasFile() ? { marginTop: '1em' } : null}>
 				<Button onClick={this.triggerFileBrowser}>
@@ -210,11 +210,11 @@ module.exports = Field.create({
 							/>
 							{this.renderActionInput()}
 						</div>
-					) : (
+						) : (
 						<div>
 							{this.hasFile()
 								? this.renderFileNameAndChangeMessage()
-								: <FormInput noedit>no file</FormInput>}
+									: <FormInput noedit>no file</FormInput>}
 						</div>
 					)}
 					{!!this.props.note && <FormNote note={this.props.note} />}
