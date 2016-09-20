@@ -1,24 +1,24 @@
-var async = require('async');
-var FieldType = require('../Type');
-var util = require('util');
-var utils = require('keystone-utils');
+const async = require('async');
+const FieldType = require('../Type');
+const util = require('util');
+const utils = require('keystone-utils');
 
-var isReserved = require('../../../lib/list/isReserved');
+const isReserved = require('../../../lib/list/isReserved');
 
 /**
  * List FieldType Constructor
  * @extends Field
  * @api public
  */
-function list (keystoneList, path, options) {
+function list(keystoneList, path, options) {
 	this._underscoreMethods = ['format'];
 	list.super_.call(this, keystoneList, path, options);
 }
 list.properName = 'List';
 util.inherits(list, FieldType);
 
-function validateFieldType (field, path, type) {
-	var Field = field.list.keystone.Field;
+function validateFieldType(field, path, type) {
+	const Field = field.list.keystone.Field;
 	if (!(type.prototype instanceof Field)) {
 		// Convert native field types to their default Keystone counterpart
 		if (type === String) {
@@ -44,14 +44,14 @@ function validateFieldType (field, path, type) {
  *
  * @api public
  */
-list.prototype.addToSchema = function (schema) {
-	var field = this;
-	var mongoose = this.list.keystone.mongoose;
+list.prototype.addToSchema = function(schema) {
+	const field = this;
+	const mongoose = this.list.keystone.mongoose;
 
-	var fields = this.fields = {};
-	var fieldsArray = this.fieldsArray = [];
-	var fieldsSpec = this.options.fields;
-	var itemSchema = new mongoose.Schema();
+	const fields = this.fields = {};
+	const fieldsArray = this.fieldsArray = [];
+	const fieldsSpec = this.options.fields;
+	const itemSchema = new mongoose.Schema();
 
 	if (typeof fieldsSpec !== 'object' || !Object.keys(fieldsSpec).length) {
 		throw new Error(
@@ -60,7 +60,7 @@ list.prototype.addToSchema = function (schema) {
 		);
 	}
 
-	function createField (path, options) {
+	function createField(path, options) {
 		if (typeof options === 'function') {
 			options = { type: options };
 		}
@@ -87,7 +87,7 @@ list.prototype.addToSchema = function (schema) {
 		return new options.type(field.list, path, options);
 	}
 
-	Object.keys(fieldsSpec).forEach(function (path) {
+	Object.keys(fieldsSpec).forEach(function(path) {
 		if (!fieldsSpec[path]) {
 			throw new Error(
 				'Invalid value for nested schema path `' + path + '` in `'
@@ -101,7 +101,7 @@ list.prototype.addToSchema = function (schema) {
 				+ field.list.key + '.' + field.path + ' is a reserved path'
 			);
 		}
-		var newField = createField(path, fieldsSpec[path]);
+		const newField = createField(path, fieldsSpec[path]);
 		fields[path] = newField;
 		fieldsArray.push(newField);
 	});
@@ -117,9 +117,9 @@ list.prototype.addToSchema = function (schema) {
 /**
  * Provides additional properties for the Admin UI
  */
-list.prototype.getProperties = function (item, separator) {
-	var fields = {};
-	this.fieldsArray.forEach(function (field) {
+list.prototype.getProperties = function(item, separator) {
+	const fields = {};
+	this.fieldsArray.forEach(function(field) {
 		fields[field.path] = field.getOptions();
 	});
 	return {
@@ -130,9 +130,9 @@ list.prototype.getProperties = function (item, separator) {
 /**
  * Formats the field value
  */
-list.prototype.format = function (item, separator) {
+list.prototype.format = function(item, separator) {
 	// TODO: How should we format nested items? Returning length for now.
-	var items = item.get(this.path) || [];
+	const items = item.get(this.path) || [];
 	return utils.plural(items.length, '* Value', '* Values');
 };
 
@@ -144,29 +144,29 @@ list.prototype.addFilterToQuery = function (filter) { };
 /**
  * Asynchronously confirms that the provided value is valid
  */
-list.prototype.validateInput = function (data, callback) {
+list.prototype.validateInput = function(data, callback) {
 	// TODO
 	// var value = this.getValueFromData(data);
-	var result = true;
+	const result = true;
 	utils.defer(callback, result);
 };
 
 /**
  * Asynchronously confirms that the a value is present
  */
-list.prototype.validateRequiredInput = function (item, data, callback) {
+list.prototype.validateRequiredInput = function(item, data, callback) {
 	// TODO
 	// var value = this.getValueFromData(data);
-	var result = true;
+	const result = true;
 	utils.defer(callback, result);
 };
 
-list.prototype.getData = function (item) {
-	var items = item.get(this.path);
-	var fieldsArray = this.fieldsArray;
-	return items.map(function (i) {
-		var result = { id: i.id };
-		for (var field of fieldsArray) {
+list.prototype.getData = function(item) {
+	const items = item.get(this.path);
+	const fieldsArray = this.fieldsArray;
+	return items.map(function(i) {
+		const result = { id: i.id };
+		for (const field of fieldsArray) {
 			result[field.path] = field.getData(i);
 		}
 		return result;
@@ -177,14 +177,14 @@ list.prototype.getData = function (item) {
  * Updates the value for this field in the item from a data object.
  * If the data object does not contain the value, then the value is set to empty array.
  */
-list.prototype.updateItem = function (item, data, files, callback) {
+list.prototype.updateItem = function(item, data, files, callback) {
 	if (typeof files === 'function') {
 		callback = files;
 		files = {};
 	}
 
-	var field = this;
-	var values = this.getValueFromData(data);
+	const field = this;
+	let values = this.getValueFromData(data);
 	// Don't update the value when it is undefined
 	if (values === undefined) {
 		return utils.defer(callback);
@@ -201,20 +201,20 @@ list.prototype.updateItem = function (item, data, files, callback) {
 	// than it could be. Concurrent saves could lead to race conditions, but we
 	// can make it more clever in a future release; this is otherwise the most
 	// resiliant update method that can be implemented without a lot of complexity
-	var listArray = item.get(this.path);
-	async.map(values, function (value, next) {
-		var prevItem = listArray.id(value.id);
-		var newItem = listArray.create(prevItem);
-		async.forEach(field.fieldsArray, function (nestedField, done) {
+	const listArray = item.get(this.path);
+	async.map(values, function(value, next) {
+		const prevItem = listArray.id(value.id);
+		const newItem = listArray.create(prevItem);
+		async.forEach(field.fieldsArray, function(nestedField, done) {
 			if (nestedField.updateItem.length === 4) {
 				nestedField.updateItem(newItem, value, files, done);
 			} else {
 				nestedField.updateItem(newItem, value, done);
 			}
-		}, function (err) {
+		}, function(err) {
 			next(err, newItem);
 		});
-	}, function (err, updatedValues) {
+	}, function(err, updatedValues) {
 		if (err) return callback(err);
 		item.set(field.path, updatedValues);
 		callback();
