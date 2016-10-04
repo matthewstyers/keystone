@@ -54,7 +54,7 @@
     "less-middleware": "2.2.0",
     "letsencrypt-express": "2.0.3",
     "list-to-array": "1.1.0",
-    "lodash": "4.16.2",
+    "lodash": "4.16.3",
     "marked": "0.3.6",
     "method-override": "2.3.6",
     "mime-types": "2.1.12",
@@ -96,7 +96,7 @@
   },
   "devDependencies": {
     "browserify-middleware": "7.1.0",
-    "codeclimate-test-reporter": "0.3.3",
+    "codeclimate-test-reporter": "0.4.0",
     "core-assert": "0.2.1",
     "disc": "1.3.2",
     "enzyme": "2.4.1",
