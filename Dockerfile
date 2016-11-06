@@ -1,5 +1,5 @@
 # uses an alpine linux image with node/npm pre-installed
-FROM mhart/alpine-node:latest
+FROM mhart/alpine-node:6.9.1
 
 # adds current directory to image at /app/keystone
 ADD . /app/keystone
