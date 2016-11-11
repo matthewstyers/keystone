@@ -108,10 +108,10 @@ t=s.length?s.pop():new a,t.task=e,i(t)}function a(){this.task=null}var i=e("./ra
 t.exports=o,a.prototype.call=function(){try{this.task.call()}catch(e){o.onerror?o.onerror(e):(u.push(e),l())}finally{this.task=null,s[s.length]=this}}},{"./raw":7}],7:[function(e,t,n){(function(e){"use strict"
 function n(e){s.length||(i(),u=!0),s[s.length]=e}function r(){for(;l<s.length;){var e=l
 if(l+=1,s[e].call(),l>c){for(var t=0,n=s.length-l;t<n;t++)s[t]=s[t+l]
-s.length-=l,l=0}}s.length=0,l=0,u=!1}function o(e){var t=1,n=new p(e),r=document.createTextNode("")
+s.length-=l,l=0}}s.length=0,l=0,u=!1}function o(e){var t=1,n=new f(e),r=document.createTextNode("")
 return n.observe(r,{characterData:!0}),function(){t=-t,r.data=t}}function a(e){return function(){function t(){clearTimeout(n),clearInterval(r),e()}var n=setTimeout(t,0),r=setInterval(t,50)}}t.exports=n
-var i,s=[],u=!1,l=0,c=1024,p=e.MutationObserver||e.WebKitMutationObserver
-i="function"==typeof p?o(r):a(r),n.requestFlush=i,n.makeRequestCallFromTimer=a}).call(this,"undefined"!=typeof global?global:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{}],8:[function(e,t,n){function r(e){return null===e||void 0===e}function o(e){return!(!e||"object"!=typeof e||"number"!=typeof e.length)&&("function"==typeof e.copy&&"function"==typeof e.slice&&!(e.length>0&&"number"!=typeof e[0]))}function a(e,t,n){var a,c
+var i,s=[],u=!1,l=0,c=1024,p="undefined"!=typeof e?e:self,f=p.MutationObserver||p.WebKitMutationObserver
+i="function"==typeof f?o(r):a(r),n.requestFlush=i,n.makeRequestCallFromTimer=a}).call(this,"undefined"!=typeof global?global:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{}],8:[function(e,t,n){function r(e){return null===e||void 0===e}function o(e){return!(!e||"object"!=typeof e||"number"!=typeof e.length)&&("function"==typeof e.copy&&"function"==typeof e.slice&&!(e.length>0&&"number"!=typeof e[0]))}function a(e,t,n){var a,c
 if(r(e)||r(t))return!1
 if(e.prototype!==t.prototype)return!1
 if(u(e))return!!u(t)&&(e=i.call(e),t=i.call(t),l(e,t,n))
@@ -589,7 +589,7 @@ var r,o=e("./ExecutionEnvironment")
 o.canUseDOM&&(r=window.performance||window.msPerformance||window.webkitPerformance),t.exports=r||{}},{"./ExecutionEnvironment":77}],98:[function(e,t,n){"use strict"
 var r,o=e("./performance")
 r=o.now?function(){return o.now()}:function(){return Date.now()},t.exports=r},{"./performance":97}],99:[function(e,t,n){"use strict"
-function r(e,t){return e===t?0!==e||1/e===1/t:e!==e&&t!==t}function o(e,t){if(r(e,t))return!0
+function r(e,t){return e===t?0!==e||0!==t||1/e===1/t:e!==e&&t!==t}function o(e,t){if(r(e,t))return!0
 if("object"!=typeof e||null===e||"object"!=typeof t||null===t)return!1
 var n=Object.keys(e),o=Object.keys(t)
 if(n.length!==o.length)return!1
@@ -758,7 +758,7 @@ var r={childContextTypes:!0,contextTypes:!0,defaultProps:!0,displayName:!0,getDe
 t.exports=function(e,t,n){if("string"!=typeof t){var i=Object.getOwnPropertyNames(t)
 a&&(i=i.concat(Object.getOwnPropertySymbols(t)))
 for(var s=0;s<i.length;++s)if(!(r[i[s]]||o[i[s]]||n&&n[i[s]]))try{e[i[s]]=t[i[s]]}catch(e){}}return e}},{}],121:[function(e,t,n){"use strict"
-function r(e){return e.replace(o,"-$&").toLowerCase().replace(a,"-ms-")}var o=/[A-Z]/g,a=/^ms-/
+function r(e){return e in i?i[e]:i[e]=e.replace(o,"-$&").toLowerCase().replace(a,"-ms-")}var o=/[A-Z]/g,a=/^ms-/,i={}
 t.exports=r},{}],122:[function(e,t,n){t.exports=function(e){e.plural(/$/,"s"),e.plural(/s$/i,"s"),e.plural(/(ax|test)is$/i,"$1es"),e.plural(/(octop|vir)us$/i,"$1i"),e.plural(/(octop|vir)i$/i,"$1i"),e.plural(/(alias|status)$/i,"$1es"),e.plural(/(bu)s$/i,"$1ses"),e.plural(/(buffal|tomat)o$/i,"$1oes"),e.plural(/([ti])um$/i,"$1a"),e.plural(/([ti])a$/i,"$1a"),e.plural(/sis$/i,"ses"),e.plural(/(?:([^fa])fe|(?:(oa)f)|([lr])f)$/i,"$1ves"),e.plural(/(hive)$/i,"$1s"),e.plural(/([^aeiouy]|qu)y$/i,"$1ies"),e.plural(/(x|ch|ss|sh)$/i,"$1es"),e.plural(/(matr|vert|ind)(?:ix|ex)$/i,"$1ices"),e.plural(/([m|l])ouse$/i,"$1ice"),e.plural(/([m|l])ice$/i,"$1ice"),e.plural(/^(ox)$/i,"$1en"),e.plural(/^(oxen)$/i,"$1"),e.plural(/(quiz)$/i,"$1zes"),e.singular(/s$/i,""),e.singular(/(n)ews$/i,"$1ews"),e.singular(/([ti])a$/i,"$1um"),e.singular(/((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$/i,"$1sis"),e.singular(/(^analy)ses$/i,"$1sis"),e.singular(/([^f])ves$/i,"$1fe"),e.singular(/(hive)s$/i,"$1"),e.singular(/(tive)s$/i,"$1"),e.singular(/(oave)s$/i,"oaf"),e.singular(/([lr])ves$/i,"$1f"),e.singular(/([^aeiouy]|qu)ies$/i,"$1y"),e.singular(/(s)eries$/i,"$1eries"),e.singular(/(m)ovies$/i,"$1ovie"),e.singular(/(x|ch|ss|sh)es$/i,"$1"),e.singular(/([m|l])ice$/i,"$1ouse"),e.singular(/(bus)es$/i,"$1"),e.singular(/(o)es$/i,"$1"),e.singular(/(shoe)s$/i,"$1"),e.singular(/(cris|ax|test)es$/i,"$1is"),e.singular(/(octop|vir)i$/i,"$1us"),e.singular(/(alias|status)es$/i,"$1"),e.singular(/^(ox)en/i,"$1"),e.singular(/(vert|ind)ices$/i,"$1ex"),e.singular(/(matr)ices$/i,"$1ix"),e.singular(/(quiz)zes$/i,"$1"),e.singular(/(database)s$/i,"$1"),e.irregular("child","children"),e.irregular("person","people"),e.irregular("man","men"),e.irregular("child","children"),e.irregular("sex","sexes"),e.irregular("move","moves"),e.irregular("cow","kine"),e.irregular("zombie","zombies"),e.irregular("oaf","oafs",!0),e.irregular("jefe","jefes"),e.irregular("save","saves"),e.irregular("safe","safes"),e.irregular("fife","fifes"),e.uncountable(["equipment","information","rice","money","species","series","fish","sheep","jeans","sushi"])}},{}],123:[function(e,t,n){var r=e("./util"),o=function(){return this.plurals=[],this.singulars=[],this.uncountables=[],this.humans=[],e("./defaults")(this),this}
 o.prototype.plural=function(e,t){"string"==typeof e&&(this.uncountables=r.array.del(this.uncountables,e)),this.uncountables=r.array.del(this.uncountables,t),this.plurals.unshift([e,t])},o.prototype.singular=function(e,t){"string"==typeof e&&(this.uncountables=r.array.del(this.uncountables,e)),this.uncountables=r.array.del(this.uncountables,t),this.singulars.unshift([e,t])},o.prototype.irregular=function(e,t,n){this.uncountables=r.array.del(this.uncountables,e),this.uncountables=r.array.del(this.uncountables,t)
 var o=""
@@ -3825,7 +3825,7 @@ function r(e){a?o.push(e):(a=!0,o.push(e),r.flush())}Object.defineProperty(n,"__
 var o=[],a=!1
 r.suspend=function(){return a=!0},r.flush=function(){for(var e=void 0;e=o.shift();)e()
 a=!1}},{}],668:[function(e,t,n){"use strict"
-function r(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:10,t=arguments[1],n=new Array(e),r=0,o=0,s=0,c=function(t){n[o]=t,o=(o+1)%e,r++},p=function(){if(0!=r){var t=n[s]
+function r(){var e=arguments.length<=0||void 0===arguments[0]?10:arguments[0],t=arguments[1],n=new Array(e),r=0,o=0,s=0,c=function(t){n[o]=t,o=(o+1)%e,r++},p=function(){if(0!=r){var t=n[s]
 return n[s]=null,r--,s=(s+1)%e,t}},f=function(){for(var e=[];r;)e.push(p())
 return e}
 return{isEmpty:function(){return 0==r},put:function(p){if(r<e)c(p)
@@ -3842,8 +3842,8 @@ if(s.length&&!a.isEmpty())throw(0,u.internalErr)("Cannot have pending takers wit
 for(var n=0;n<s.length;n++){var r=s[n]
 if(!r[u.MATCH]||r[u.MATCH](t))return s.splice(n,1),r(t)}}}function n(t){e(),(0,u.check)(t,u.is.func,"channel.take's callback must be a function"),i&&a.isEmpty()?t(p):a.isEmpty()?(s.push(t),t.cancel=function(){return(0,u.remove)(s,t)}):t(a.take())}function r(t){return e(),(0,u.check)(t,u.is.func,"channel.flush' callback must be a function"),i&&a.isEmpty()?void t(p):void t(a.flush())}function o(){if(e(),!i&&(i=!0,s.length)){var t=s
 s=[]
-for(var n=0,r=t.length;n<r;n++)t[n](p)}}var a=arguments.length>0&&void 0!==arguments[0]?arguments[0]:l.buffers.fixed(),i=!1,s=[]
-return(0,u.check)(a,u.is.buffer,d),{take:n,put:t,flush:r,close:o,get __takers__(){return s},get __closed__(){return i}}}function a(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:l.buffers.none(),n=arguments[2]
+for(var n=0,r=t.length;n<r;n++)t[n](p)}}var a=arguments.length<=0||void 0===arguments[0]?l.buffers.fixed():arguments[0],i=!1,s=[]
+return(0,u.check)(a,u.is.buffer,d),{take:n,put:t,flush:r,close:o,get __takers__(){return s},get __closed__(){return i}}}function a(e){var t=arguments.length<=1||void 0===arguments[1]?l.buffers.none():arguments[1],n=arguments[2]
 arguments.length>2&&(0,u.check)(n,u.is.func,"Invalid match function passed to eventChannel")
 var r=o(t),a=e(function(e){f(e)?r.close():n&&!n(e)||r.put(e)})
 if(!u.is.func(a))throw new Error("in eventChannel: subscribe should return a function to unsubscribe")
@@ -3854,7 +3854,7 @@ for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(e[r]=n[r])}return e}
 n.emitter=r,n.channel=o,n.eventChannel=a,n.stdChannel=i
 var u=e("./utils"),l=e("./buffers"),c="@@redux-saga/CHANNEL_END",p=n.END={type:c},f=n.isEnd=function(e){return e&&e.type===c},d=n.INVALID_BUFFER="invalid buffer passed to channel factory function",h=n.UNDEFINED_INPUT_ERROR="Saga was provided with an undefined action"
 "production"!==t.env.NODE_ENV&&(n.UNDEFINED_INPUT_ERROR=h+="\nHints:\n    - check that your Action Creator returns a non-undefined value\n    - if the Saga was started using runSaga, check that your subscribe source provides the action to its listeners\n  ")}).call(this,e("_process"))},{"./buffers":668,"./utils":675,_process:342}],670:[function(e,t,n){"use strict"
-function r(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function o(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"*"
+function r(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function o(){var e=arguments.length<=0||void 0===arguments[0]?"*":arguments[0]
 if(arguments.length&&(0,w.check)(arguments[0],w.is.notUndef,"take(patternOrChannel): patternOrChannel is undefined"),w.is.pattern(e))return A(E,{pattern:e})
 if(w.is.channel(e))return A(E,{channel:e})
 throw new Error("take(patternOrChannel): argument "+String(e)+" is not valid channel or a valid pattern")}function a(){var e=o.apply(void 0,arguments)
@@ -3863,7 +3863,7 @@ var r=null
 if(w.is.array(t)){var o=t,a=_(o,2)
 r=a[0],t=a[1]}else if(t.fn){var i=t
 r=i.context,t=i.fn}return(0,w.check)(t,w.is.func,e+": argument "+t+" is not a function"),{context:r,fn:t,args:n}}function l(e){for(var t=arguments.length,n=Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r]
-return A(P,u("call",e,n))}function c(e,t){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:[]
+return A(P,u("call",e,n))}function c(e,t){var n=arguments.length<=2||void 0===arguments[2]?[]:arguments[2]
 return A(P,u("apply",{context:e,fn:t},n))}function p(e){for(var t=arguments.length,n=Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r]
 return A(T,u("cps",e,n))}function f(e){for(var t=arguments.length,n=Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r]
 return A(k,u("fork",e,n))}function d(e){for(var t=arguments.length,n=Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r]
@@ -3888,7 +3888,7 @@ return(0,s.default)(e.apply(void 0,r),i.subscribe,a,o,n,0,e.name)}var o=e.getSta
 r=t
 var i=(0,u.emitter)()
 return function(e){return function(t){var n=e(t)
-return i.emit(t),n}}}var n=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},r=void 0
+return i.emit(t),n}}}var n=arguments.length<=0||void 0===arguments[0]?{}:arguments[0],r=void 0
 if(a.is.func(n))throw"production"===t.env.NODE_ENV?new Error("Saga middleware no longer accept Generator functions. Use sagaMiddleware.run instead"):new Error("You passed a function to the Saga middleware. You are likely trying to start a        Saga by directly passing it to the middleware. This is no longer possible starting from 0.10.0.        To run a Saga, you must do it dynamically AFTER mounting the middleware into the store.\n        Example:\n          import createSagaMiddleware from 'redux-saga'\n          ... other imports\n\n          const sagaMiddleware = createSagaMiddleware()\n          const store = createStore(reducer, applyMiddleware(sagaMiddleware))\n          sagaMiddleware.run(saga, ...args)\n      ")
 if(n.logger&&!a.is.func(n.logger))throw new Error("`options.logger` passed to the Saga middleware is not a function!")
 if(n.onerror&&!a.is.func(n.onerror))throw new Error("`options.onerror` passed to the Saga middleware is not a function!")
@@ -3904,7 +3904,7 @@ var o=void 0,a=void 0
 try{o=n.apply(t,r)}catch(e){a=e}return f.is.iterator(o)?o:a?(0,f.makeIterator)(function(){throw a}):(0,f.makeIterator)(function(){var e=void 0,t={done:!1,value:o},n=function(e){return{done:!0,value:e}}
 return function(r){return e?n(r):(e=!0,t)}}())}function c(e){return{fn:e}}function p(e){function t(){J.isRunning&&!J.isCancelled&&(J.isCancelled=!0,r(x))}function n(){e._isRunning&&!e._isCancelled&&(e._isCancelled=!0,ee.cancelAll(),d(x))}function r(t,n){if(!J.isRunning)throw new Error("Trying to resume an already finished generator")
 try{var o=void 0
-n?o=e.throw(t):t===x?(J.isCancelled=!0,r.cancel(),o=f.is.func(e.return)?e.return(x):{done:!0,value:x}):o=t===w?f.is.func(e.return)?e.return():{done:!0}:e.next(t),o.done?(J.isMainRunning=!1,J.cont&&J.cont(o.value)):E(o.value,q,"",r)}catch(e){J.isCancelled&&X("error","uncaught at "+z,e.message),J.isMainRunning=!1,J.cont(e,!0)}}function d(t,n){e._isRunning=!1,Q.close(),n?(t instanceof Error&&(t.sagaStack="at "+z+" \n "+(t.sagaStack||t.stack)),Z.cont||(X("error","uncaught",t.sagaStack||t.stack),t instanceof Error&&K&&K(t)),e._error=t,e._isAborted=!0,e._deferredEnd&&e._deferredEnd.reject(t)):(t===x&&y&&X("info",z+" has been cancelled",""),e._result=t,e._deferredEnd&&e._deferredEnd.resolve(t)),Z.cont&&Z.cont(t,n),Z.joiners.forEach(function(e){return e.cb(t,n)}),Z.joiners=null}function E(e,t){function n(e,t){i||(i=!0,o.cancel=f.noop,G&&(t?G.effectRejected(a,e):G.effectResolved(a,e)),o(e,t))}var r=arguments.length>2&&void 0!==arguments[2]?arguments[2]:"",o=arguments[3],a=_()
+n?o=e.throw(t):t===x?(J.isCancelled=!0,r.cancel(),o=f.is.func(e.return)?e.return(x):{done:!0,value:x}):o=t===w?f.is.func(e.return)?e.return():{done:!0}:e.next(t),o.done?(J.isMainRunning=!1,J.cont&&J.cont(o.value)):E(o.value,q,"",r)}catch(e){J.isCancelled&&X("error","uncaught at "+z,e.message),J.isMainRunning=!1,J.cont(e,!0)}}function d(t,n){e._isRunning=!1,Q.close(),n?(t instanceof Error&&(t.sagaStack="at "+z+" \n "+(t.sagaStack||t.stack)),Z.cont||(X("error","uncaught",t.sagaStack||t.stack),t instanceof Error&&K&&K(t)),e._error=t,e._isAborted=!0,e._deferredEnd&&e._deferredEnd.reject(t)):(t===x&&y&&X("info",z+" has been cancelled",""),e._result=t,e._deferredEnd&&e._deferredEnd.resolve(t)),Z.cont&&Z.cont(t,n),Z.joiners.forEach(function(e){return e.cb(t,n)}),Z.joiners=null}function E(e,t){function n(e,t){i||(i=!0,o.cancel=f.noop,G&&(t?G.effectRejected(a,e):G.effectResolved(a,e)),o(e,t))}var r=arguments.length<=2||void 0===arguments[2]?"":arguments[2],o=arguments[3],a=_()
 G&&G.effectTriggered({effectId:a,parentEffectId:t,label:r,effect:e})
 var i=void 0
 n.cancel=f.noop,o.cancel=function(){if(!i){i=!0
@@ -3915,9 +3915,11 @@ return f.is.promise(e)?C(e,n):f.is.helper(e)?M(c(e),a,n):f.is.iterator(e)?O(e,a,
 n=n||Q
 var a=function(e){return e instanceof Error?t(e,!0):t((0,g.isEnd)(e)&&!o?w:e)}
 try{n.take(a,s(r))}catch(e){return t(e,!0)}t.cancel=a.cancel}function T(e,t){var n=e.channel,r=e.action,o=e.sync;(0,h.default)(function(){var e=void 0
-try{e=(n?n.put:H)(r)}catch(e){return t(e,!0)}return o&&f.is.promise(e)?void C(e,t):t(e)})}function k(e,t,n){var r=e.context,o=e.fn,a=e.args,i=void 0
+try{e=(n?n.put:H)(r)}catch(e){if(n||o)return t(e,!0)
+X("error","uncaught at "+z,e.stack||e.message||e)}return o&&f.is.promise(e)?void C(e,t):t(e)})}function k(e,t,n){var r=e.context,o=e.fn,a=e.args,i=void 0
 try{i=o.apply(r,a)}catch(e){return n(e,!0)}return f.is.promise(i)?C(i,n):f.is.iterator(i)?O(i,t,o.name,n):n(i)}function S(e,t){var n=e.context,r=e.fn,o=e.args
-try{r.apply(n,o.concat(function(e,n){return f.is.undef(e)?t(n):t(e,!0)}))}catch(e){return t(e,!0)}}function M(e,t,n){var r=e.context,o=e.fn,a=e.args,i=e.detached,s=l({context:r,fn:o,args:a})
+try{!function(){var e=function(e,n){return f.is.undef(e)?t(n):t(e,!0)}
+r.apply(n,o.concat(e)),e.cancel&&(t.cancel=function(){return e.cancel()})}()}catch(e){return t(e,!0)}}function M(e,t,n){var r=e.context,o=e.fn,a=e.args,i=e.detached,s=l({context:r,fn:o,args:a})
 h.default.suspend()
 var u=p(s,B,H,W,V,t,o.name,i?null:f.noop)
 i?n(u):s._isRunning?(ee.addTask(u),n(u)):s._error?ee.abort(s._error):n(u),h.default.flush()}function D(e,t){e.isRunning()?!function(){var n={task:Z,cb:t}
@@ -3926,13 +3928,13 @@ var o=0,a=void 0,i=Array(e.length),s=e.map(function(e,t){var s=function(e,s){a||
 return s.cancel=f.noop,s})
 n.cancel=function(){a||(a=!0,s.forEach(function(e){return e.cancel()}))},e.forEach(function(e,n){return E(e,t,n,s[n])})}function N(e,t,n){var r=void 0,o=Object.keys(e),a={}
 o.forEach(function(e){var t=function(t,o){r||(o?(n.cancel(),n(t,!0)):(0,g.isEnd)(t)||t===w||t===x||(n.cancel(),r=!0,n(i({},e,t))))}
-t.cancel=f.noop,a[e]=t}),n.cancel=function(){r||(r=!0,o.forEach(function(e){return a[e].cancel()}))},o.forEach(function(n){return E(e[n],t,n,a[n])})}function A(e,t){var n=e.selector,r=e.args
+t.cancel=f.noop,a[e]=t}),n.cancel=function(){r||(r=!0,o.forEach(function(e){return a[e].cancel()}))},o.forEach(function(n){r||E(e[n],t,n,a[n])})}function A(e,t){var n=e.selector,r=e.args
 try{var o=n.apply(void 0,[W()].concat(a(r)))
 t(o)}catch(e){t(e,!0)}}function I(e,t){var n=e.pattern,r=e.buffer,o=s(n)
 o.pattern=n,t((0,g.eventChannel)(B,r||m.buffers.fixed(),o))}function F(e,t){t(!!J.isCancelled)}function L(e,t){e.flush(t)}function U(e,t,r,a){var s,u,l
 return r._deferredEnd=null,u={},i(u,f.TASK,!0),i(u,"id",e),i(u,"name",t),s="done",l={},l[s]=l[s]||{},l[s].get=function(){if(r._deferredEnd)return r._deferredEnd.promise
 var e=(0,f.deferred)()
-return r._deferredEnd=e,r._isRunning||(r._error?e.reject(r._error):e.resolve(r._result)),e.promise},i(u,"cont",a),i(u,"joiners",[]),i(u,"cancel",n),i(u,"isRunning",function(){return r._isRunning}),i(u,"isCancelled",function(){return r._isCancelled}),i(u,"isAborted",function(){return r._isAborted}),i(u,"result",function(){return r._result}),i(u,"error",function(){return r._error}),o(u,l),u}var B=arguments.length>1&&void 0!==arguments[1]?arguments[1]:function(){return f.noop},H=arguments.length>2&&void 0!==arguments[2]?arguments[2]:f.noop,W=arguments.length>3&&void 0!==arguments[3]?arguments[3]:f.noop,V=arguments.length>4&&void 0!==arguments[4]?arguments[4]:{},q=arguments.length>5&&void 0!==arguments[5]?arguments[5]:0,z=arguments.length>6&&void 0!==arguments[6]?arguments[6]:"anonymous",$=arguments[7];(0,f.check)(e,f.is.iterator,b)
+return r._deferredEnd=e,r._isRunning||(r._error?e.reject(r._error):e.resolve(r._result)),e.promise},i(u,"cont",a),i(u,"joiners",[]),i(u,"cancel",n),i(u,"isRunning",function(){return r._isRunning}),i(u,"isCancelled",function(){return r._isCancelled}),i(u,"isAborted",function(){return r._isAborted}),i(u,"result",function(){return r._result}),i(u,"error",function(){return r._error}),o(u,l),u}var B=arguments.length<=1||void 0===arguments[1]?function(){return f.noop}:arguments[1],H=arguments.length<=2||void 0===arguments[2]?f.noop:arguments[2],W=arguments.length<=3||void 0===arguments[3]?f.noop:arguments[3],V=arguments.length<=4||void 0===arguments[4]?{}:arguments[4],q=arguments.length<=5||void 0===arguments[5]?0:arguments[5],z=arguments.length<=6||void 0===arguments[6]?"anonymous":arguments[6],$=arguments[7];(0,f.check)(e,f.is.iterator,b)
 var G=V.sagaMonitor,Y=V.logger,K=V.onError,X=Y||f.log,Q=(0,g.stdChannel)(B)
 r.cancel=f.noop
 var Z=U(q,z,e,$),J={name:z,cancel:t,isRunning:!0},ee=u(z,J,d)
@@ -3945,7 +3947,7 @@ function r(e,t){function n(t,n){if(a===h)return d
 if(n)throw a=h,n
 o&&o(t)
 var r=e[a](),i=u(r,3),s=i[0],l=i[1],c=i[2]
-return a=s,o=c,a===h?d:l}var r=arguments.length>2&&void 0!==arguments[2]?arguments[2]:"iterator",o=void 0,a=t
+return a=s,o=c,a===h?d:l}var r=arguments.length<=2||void 0===arguments[2]?"iterator":arguments[2],o=void 0,a=t
 return(0,c.makeIterator)(n,function(e){return n(null,e)},r,!0)}function o(e){return Array.isArray(e)?String(e.map(function(e){return String(e)})):String(e)}function a(e,t){for(var n=arguments.length,a=Array(n>2?n-2:0),i=2;i<n;i++)a[i-2]=arguments[i]
 var s={done:!1,value:(0,p.take)(e)},u=function(e){return{done:!1,value:p.fork.apply(void 0,[t].concat(a,[e]))}},c=void 0,f=function(e){return c=e}
 return r({q1:function(){return["q2",s,f]},q2:function(){return c===l.END?[h]:["q1",u(c)]}},"q1","takeEvery("+o(e)+", "+t.name+")")}function i(e,t){for(var n=arguments.length,a=Array(n>2?n-2:0),i=2;i<n;i++)a[i-2]=arguments[i]
@@ -3960,15 +3962,15 @@ throw new TypeError("Invalid attempt to destructure non-iterable instance")}}()
 n.takeEvery=a,n.takeLatest=i,n.throttle=s
 var l=e("./channel"),c=e("./utils"),p=e("./io"),f=e("./buffers"),d={done:!0,value:void 0},h={}},{"./buffers":668,"./channel":669,"./io":670,"./utils":675}],675:[function(e,t,n){"use strict"
 function r(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function o(e,t,n){if(!t(e))throw f("error","uncaught at check",n),new Error(n)}function a(e,t){var n=e.indexOf(t)
-n>=0&&e.splice(n,1)}function i(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},t=d({},e),n=new Promise(function(e,n){t.resolve=e,t.reject=n})
+n>=0&&e.splice(n,1)}function i(){var e=arguments.length<=0||void 0===arguments[0]?{}:arguments[0],t=d({},e),n=new Promise(function(e,n){t.resolve=e,t.reject=n})
 return t.promise=n,t}function s(e){for(var t=[],n=0;n<e;n++)t.push(i())
-return t}function u(e){var t=!(arguments.length>1&&void 0!==arguments[1])||arguments[1],n=void 0,r=new Promise(function(r){n=setTimeout(function(){return r(t)},e)})
+return t}function u(e){var t=arguments.length<=1||void 0===arguments[1]||arguments[1],n=void 0,r=new Promise(function(r){n=setTimeout(function(){return r(t)},e)})
 return r[y]=function(){return clearTimeout(n)},r}function l(){var e,t=!0,n=void 0,o=void 0
-return e={},r(e,g,!0),r(e,"isRunning",function(){return t}),r(e,"result",function(){return n}),r(e,"error",function(){return o}),r(e,"setRunning",function(e){return t=e}),r(e,"setResult",function(e){return n=e}),r(e,"setError",function(e){return o=e}),e}function c(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:0
-return function(){return++e}}function p(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:w,n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:"",r=arguments[3],o={name:n,next:e,throw:t,return:x}
+return e={},r(e,g,!0),r(e,"isRunning",function(){return t}),r(e,"result",function(){return n}),r(e,"error",function(){return o}),r(e,"setRunning",function(e){return t=e}),r(e,"setResult",function(e){return n=e}),r(e,"setError",function(e){return o=e}),e}function c(){var e=arguments.length<=0||void 0===arguments[0]?0:arguments[0]
+return function(){return++e}}function p(e){var t=arguments.length<=1||void 0===arguments[1]?w:arguments[1],n=arguments.length<=2||void 0===arguments[2]?"":arguments[2],r=arguments[3],o={name:n,next:e,throw:t,return:x}
 return r&&(o[m]=!0),"undefined"!=typeof Symbol&&(o[Symbol.iterator]=function(){return o}),o}function f(e,t,n){"undefined"==typeof window?console.log("redux-saga "+e+": "+t+"\n"+(n&&n.stack||n)):console[e](t,n)}Object.defineProperty(n,"__esModule",{value:!0})
 var d=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t]
-for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(e[r]=n[r])}return e},h="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e}
+for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(e[r]=n[r])}return e},h="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol?"symbol":typeof e}
 n.check=o,n.remove=a,n.deferred=i,n.arrayOfDeffered=s,n.delay=u,n.createMockTask=l,n.autoInc=c,n.makeIterator=p,n.log=f
 var v=n.sym=function(e){return"@@redux-saga/"+e},g=n.TASK=v("TASK"),m=n.HELPER=v("HELPER"),y=(n.MATCH=v("MATCH"),n.CANCEL=v("cancelPromise")),b=n.konst=function(e){return function(){return e}},_=(n.kTrue=b(!0),n.kFalse=b(!1),n.noop=function(){},n.ident=function(e){return e},n.is={undef:function(e){return null===e||void 0===e},notUndef:function(e){return null!==e&&void 0!==e},func:function(e){return"function"==typeof e},number:function(e){return"number"==typeof e},array:Array.isArray,promise:function(e){return e&&_.func(e.then)},iterator:function(e){return e&&_.func(e.next)&&_.func(e.throw)},task:function(e){return e&&e[g]},observable:function(e){return e&&_.func(e.subscribe)},buffer:function(e){return e&&_.func(e.isEmpty)&&_.func(e.take)&&_.func(e.put)},pattern:function(e){return e&&("string"==typeof e||"symbol"===("undefined"==typeof e?"undefined":h(e))||_.func(e)||_.array(e))},channel:function(e){return e&&_.func(e.take)&&_.func(e.close)},helper:function(e){return e&&e[m]}}),w=function(e){throw e},x=function(e){return{value:e,done:!0}}
 n.internalErr=function(e){return new Error("\n  redux-saga: Error checking hooks detected an inconsistent state. This is likely a bug\n  in redux-saga code and not yours. Thanks for reporting this in the project's github repo.\n  Error: "+e+"\n")}},{}],676:[function(e,t,n){"use strict"
@@ -4027,12 +4029,12 @@ return c({type:l.INIT}),d={dispatch:c,subscribe:s,getState:a,replaceReducer:p},d
 var a=e("lodash/isPlainObject"),i=r(a),s=e("symbol-observable"),u=r(s),l=n.ActionTypes={INIT:"@@redux/INIT"}},{"lodash/isPlainObject":316,"symbol-observable":684}],682:[function(e,t,n){"use strict"
 function r(e){"undefined"!=typeof console&&"function"==typeof console.error&&console.error(e)
 try{throw new Error(e)}catch(e){}}n.__esModule=!0,n.default=r},{}],683:[function(e,t,n){"use strict"
-t.exports=function(e){return encodeURIComponent(e).replace(/[!'()*]/g,function(e){return"%"+e.charCodeAt(0).toString(16).toUpperCase()})}},{}],684:[function(e,t,n){t.exports=e("./lib/index")},{"./lib/index":685}],685:[function(e,t,n){(function(t){"use strict"
-function r(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(n,"__esModule",{value:!0})
-var o=e("./ponyfill"),a=r(o),i=void 0
-"undefined"!=typeof t?i=t:"undefined"!=typeof window&&(i=window)
-var s=(0,a.default)(i)
-n.default=s}).call(this,"undefined"!=typeof global?global:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{"./ponyfill":686}],686:[function(e,t,n){"use strict"
+t.exports=function(e){return encodeURIComponent(e).replace(/[!'()*]/g,function(e){return"%"+e.charCodeAt(0).toString(16).toUpperCase()})}},{}],684:[function(e,t,n){t.exports=e("./lib/index")},{"./lib/index":685}],685:[function(e,t,n){(function(r){"use strict"
+function o(e){return e&&e.__esModule?e:{default:e}}Object.defineProperty(n,"__esModule",{value:!0})
+var a,i=e("./ponyfill"),s=o(i)
+a="undefined"!=typeof self?self:"undefined"!=typeof window?window:"undefined"!=typeof r?r:"undefined"!=typeof t?t:Function("return this")()
+var u=(0,s.default)(a)
+n.default=u}).call(this,"undefined"!=typeof global?global:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{"./ponyfill":686}],686:[function(e,t,n){"use strict"
 function r(e){var t,n=e.Symbol
 return"function"==typeof n?n.observable?t=n.observable:(t=n("observable"),n.observable=t):t="@@observable",t}Object.defineProperty(n,"__esModule",{value:!0}),n.default=r},{}],687:[function(e,t,n){function r(e){return e.replace(/^\s*|\s*$/g,"")}n=t.exports=r,n.left=function(e){return e.replace(/^\s*/,"")},n.right=function(e){return e.replace(/\s*$/,"")}},{}],688:[function(e,t,n){arguments[4][119][0].apply(n,arguments)},{dup:119}],689:[function(e,t,n){function r(){for(var e={},t=0;t<arguments.length;t++){var n=arguments[t]
 for(var r in n)o.call(n,r)&&(e[r]=n[r])}return e}t.exports=r
