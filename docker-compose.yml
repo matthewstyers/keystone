@@ -4,5 +4,5 @@ version: '2'
 services:
   keystone:
     build: .
-    image: styers/keystone:edge
+    image: styers/keystone:extended-list-query
     container_name: keystone
