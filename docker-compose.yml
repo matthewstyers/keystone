@@ -3,6 +3,14 @@
 version: '2'
 services:
   keystone:
-    build: .
-    image: styers/keystone:extended-list-query
+    build:
+      context: .
+      dockerfile: Dockerfiles/Dockerfile
+    image: styers/keystone:edge
     container_name: keystone
+  nano:
+    build:
+      context: .
+      dockerfile: Dockerfiles/Dockerfile-Nano
+    image: styers/keystone:edge.nano
+    container_name: keystone_nano

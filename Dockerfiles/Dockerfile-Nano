@@ -2,15 +2,15 @@
 FROM mhart/alpine-node:6.9.1
 
 # adds current directory to image at /app/keystone
-ADD . /app/keystone
+ADD . /keystone
 
 # issues some final instructions to prep for build
 # on build, the working directory will be /app/keystone
-WORKDIR /app/keystone
+WORKDIR /keystone
 
 # on build, /app/keystone on this image (i.e. this directory) will
 # be mapped to the dependent image at the same location
-VOLUME /app/keystone
+VOLUME /keystone
 
 # adds some instuctions to execute at the beginning of the dependant image's
 # build process.
