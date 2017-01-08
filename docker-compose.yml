@@ -6,11 +6,5 @@ services:
     build:
       context: .
       dockerfile: Dockerfiles/Dockerfile
-    image: styers/keystone:edge
+    image: styers/keystone:edge-extended-list
     container_name: keystone
-  nano:
-    build:
-      context: .
-      dockerfile: Dockerfiles/Dockerfile-Nano
-    image: styers/keystone:edge.nano
-    container_name: keystone_nano
