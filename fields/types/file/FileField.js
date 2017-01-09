@@ -52,9 +52,14 @@ module.exports = Field.create({
 		return this.props.collapse && !this.hasExisting();
 	},
 	componentWillUpdate (nextProps) {
+		const value = this.props.value;
+		const nextValue = nextProps.value;
+
 		// Show the new filename when it's finished uploading
-		if (this.props.value.filename !== nextProps.value.filename) {
-			this.setState(buildInitialState(nextProps));
+		if (value && nextValue) {
+			if (value.filename !== nextValue.filename) {
+				this.setState(buildInitialState(nextProps));
+			}
 		}
 	},
 
