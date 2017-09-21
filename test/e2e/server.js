@@ -1,7 +1,6 @@
 var async = require('async');
 var keystone = require('../..');
 var ReactEngine = require('react-engine');
-var view = require('react-engine/lib/expressView');
 var engine = ReactEngine.server.create({});
 var request = require('superagent');
 var moment = require('moment');
@@ -10,8 +9,8 @@ var path = require('path');
 var keystoneNightwatchE2e = require('keystone-nightwatch-e2e');
 
 // Set app-specific env for nightwatch session
-process.env['SELENIUM_SERVER'] = keystoneNightwatchE2e.seleniumPath;
-process.env['PAGE_OBJECTS_PATH'] = keystoneNightwatchE2e.pageObjectsPath;
+process.env.KNE_TEST_PATHS = 'test/e2e/adminUI/tests';
+process.env.KNE_EXCLUDE_TEST_PATHS = 'test/e2e/adminUI/tests/group006Fields/commonFieldTestUtils.js,test/e2e/adminUI/tests/group999FixMe/*';
 
 // determine the mongo uri and database name
 var dbName = '/e2e' + (process.env.KEYSTONEJS_PORT || 3000);
@@ -80,13 +79,11 @@ function runKeystone(cb) {
 
 		'mongo': mongoUri,
 
-		'less': 'public',
-		'static': 'public',
+		'static': 'frontend',
 		'favicon': 'adminuiCustom/favicon.ico',
-		'views': 'templates/views',
-		'view engine': '.jsx',
-		'custom engine': engine,
-		'view': view,
+		'less': 'frontend',
+		'views': 'frontend',
+		'view engine': 'jade',
 
 		'auto update': true,
 		'session': true,
@@ -164,7 +161,6 @@ function runKeystone(cb) {
 function start() {
 	var runTests = process.argv.indexOf('--notest') === -1;
 	var dropDB = process.argv.indexOf('--nodrop') === -1;
-	var runSelenium = !(process.argv.indexOf('--selenium-in-background') === -1);
 
 	async.series([
 
@@ -187,8 +183,7 @@ function start() {
 		function (cb) {
 			if (runTests) {
 				runE2E({
-					keystone: keystone,
-					runSelenium: runSelenium
+					keystone: keystone
 				}, cb);
 			} else {
 				cb();
@@ -197,16 +192,18 @@ function start() {
 
 	], function(err) {
 		var exitProcess = false;
+		var exitCode = 0;
 		if (err) {
 			console.error([moment().format('HH:mm:ss:SSS')] + ' e2e: ' + err);
 			exitProcess = true;
+			exitCode = 1;
 		}
 		if (runTests) {
 			exitProcess = true;
 		}
 		if (exitProcess) {
 			console.error([moment().format('HH:mm:ss:SSS')] + ' e2e: exiting');
-			process.exit();
+			process.exit(exitCode);
 		}
 	});
 }
