@@ -11,9 +11,9 @@ import { Button, GlyphButton } from '../../../admin/client/App/elemental';
 import InvalidFieldType from '../../../admin/client/App/shared/InvalidFieldType';
 
 let i = 0;
-function generateId () {
+function generateId() {
 	return i++;
-};
+}
 
 const ItemDom = ({ name, id, onRemove, children }) => (
 	<div style={{
@@ -42,8 +42,14 @@ module.exports = Field.create({
 		path: React.PropTypes.string.isRequired,
 		value: React.PropTypes.array,
 	},
-	addItem () {
-		const { path, value, onChange } = this.props;
+	addItem() {
+		const { path, onChange } = this.props;
+		let { value } = this.props;
+		// adds default value for nested list updater
+		if (!value) {
+			value = {};
+		}
+
 		onChange({
 			path,
 			value: [
@@ -55,12 +61,12 @@ module.exports = Field.create({
 			],
 		});
 	},
-	removeItem (index) {
+	removeItem(index) {
 		const { value: oldValue, path, onChange } = this.props;
 		const value = oldValue.slice(0, index).concat(oldValue.slice(index + 1));
 		onChange({ path, value });
 	},
-	handleFieldChange (index, event) {
+	handleFieldChange(index, event) {
 		const { value: oldValue, path, onChange } = this.props;
 		const head = oldValue.slice(0, index);
 		const item = {
@@ -71,7 +77,7 @@ module.exports = Field.create({
 		const value = [...head, item, ...tail];
 		onChange({ path, value });
 	},
-	renderFieldsForItem (index, value) {
+	renderFieldsForItem(index, value) {
 		return Object.keys(this.props.fields).map((path) => {
 			const field = this.props.fields[path];
 			if (typeof Fields[field.type] !== 'function') {
@@ -94,10 +100,12 @@ module.exports = Field.create({
 			return React.createElement(Fields[field.type], props);
 		}, this);
 	},
-	renderItems () {
+	renderItems() {
 		const { value = [], path } = this.props;
 		const onAdd = this.addItem;
 		return (
+			// TODO: value inside this map is shadow-declared; seems to be
+			// messing with the returned values.
 			<div>
 				{value.map((value, index) => {
 					const { id, _isNew } = value;
@@ -116,15 +124,15 @@ module.exports = Field.create({
 			</div>
 		);
 	},
-	renderUI () {
+	renderUI() {
 		const { label, value } = this.props;
 		return (
 			<div className={css(classes.container)}>
 				<h3 data-things="whatever">{label}</h3>
 				{this.shouldRenderField() ? (
 					this.renderItems()
-				) : (
-					<Domify value={value} />
+					) : (
+						<Domify value={value} />
 				)}
 				{this.renderNote()}
 			</div>
