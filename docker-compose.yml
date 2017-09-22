@@ -1,8 +1,0 @@
-# makes the container available to peer services
-# NOT available as a standalone service as constituted;
-version: '2'
-services:
-  keystone:
-    build: .
-    image: styers/keystone:dev
-    container_name: keystone
