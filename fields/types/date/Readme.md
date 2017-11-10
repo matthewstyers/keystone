@@ -16,17 +16,14 @@ String parsing with moment will be done using the `inputFormat` option, which de
 ```
 
 ## Options
-* `inputFormat` `String`
-
-How the field interpret string input. See moment documentation for more information on available options.
-
-Defaults to 'YYYY-MM-DD'
 
 * `format` `String`
 
-The default format pattern data will be returned in from the database.
+The default format pattern to use, defaults to Do MMM YYYY
 
-Defaults to 'Do MMM YYYY'
+* `yearRange` `Array` `minYear, maxYear`
+
+The default range of years to be displayed.
 
 See the [momentjs format docs](http://momentjs.com/docs/#/displaying/format/) for information on the supported formats and options.
 
