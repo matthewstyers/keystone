@@ -73,6 +73,8 @@ location.prototype.addToSchema = function (schema) {
 		serialised: this.path + '.serialised',
 		improve: this.path + '_improve',
 		overwrite: this.path + '_improve_overwrite',
+		description: this.path + '.description',
+		placeId: this.path + '.placeId',
 	};
 
 	var getFieldDef = function (type, key) {
@@ -95,6 +97,8 @@ location.prototype.addToSchema = function (schema) {
 		postcode: getFieldDef(String, 'postcode'),
 		country: getFieldDef(String, 'country'),
 		geo: { type: [Number], index: '2dsphere' },
+		description: getFieldDef(String, 'description'),
+		placeId: getFieldDef(String, 'placeId'),
 	}, this.path + '.');
 
 	schema.virtual(paths.serialised).get(function () {
