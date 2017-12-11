@@ -75,6 +75,7 @@ location.prototype.addToSchema = function (schema) {
 		overwrite: this.path + '_improve_overwrite',
 		description: this.path + '.description',
 		placeId: this.path + '.placeId',
+		park: this.path + '.park',
 	};
 
 	var getFieldDef = function (type, key) {
@@ -99,6 +100,7 @@ location.prototype.addToSchema = function (schema) {
 		geo: { type: [Number], index: '2dsphere' },
 		description: getFieldDef(String, 'description'),
 		placeId: getFieldDef(String, 'placeId'),
+		park: getFieldDef(String, 'park'),
 	}, this.path + '.');
 
 	schema.virtual(paths.serialised).get(function () {
@@ -197,6 +199,9 @@ location.prototype.getInputFromData = function (data) {
 			state: data[this.paths.state],
 			postcode: data[this.paths.postcode],
 			country: data[this.paths.country],
+			description: data[this.paths.description],
+			placeId: data[this.paths.placeId],
+			park: data[this.paths.park],
 			geo: data[this.paths.geo],
 			geo_lat: data[this.paths.geo],
 			geo_lng: data[this.paths.geo],
@@ -276,7 +281,7 @@ location.prototype.inputIsValid = function (data, required, item) {
 location.prototype.updateItem = function (item, data, callback) {
 
 	var paths = this.paths;
-	var fieldKeys = ['number', 'name', 'street1', 'street2', 'suburb', 'state', 'postcode', 'country'];
+	var fieldKeys = ['number', 'name', 'street1', 'street2', 'suburb', 'state', 'postcode', 'country', 'description', 'placeId', 'park'];
 	var geoKeys = ['geo', 'geo_lat', 'geo_lng'];
 	var valueKeys = fieldKeys.concat(geoKeys);
 	var valuePaths = valueKeys;
