@@ -27,8 +27,11 @@ module.exports = Field.create({
 	},
 
 	renderValue () {
-		const { ops, value } = this.props;
-		const selected = ops.find(opt => opt.value === value);
+		const { multi, ops, value } = this.props;
+		const findVal = (val) => ops.find(opt => opt.value === val);
+		const selected = multi
+		? _.join(_.map(value, (item) => findVal(item)), ',')
+		: findVal(value);
 
 		return (
 			<FormInput noedit>
@@ -38,7 +41,7 @@ module.exports = Field.create({
 	},
 
 	renderField () {
-		const { numeric, ops, path, value: val } = this.props;
+		const { multi, numeric, ops, path, value: val } = this.props;
 
 		// TODO: This should be natively handled by the Select component
 		const options = (numeric)
@@ -48,6 +51,8 @@ module.exports = Field.create({
 			: ops;
 		const value = (typeof val === 'number')
 			? String(val)
+			: (typeof val === Array)
+			? _.map(val, (item) => typeof item === 'number' ? String(item) : item)
 			: val;
 
 		return (
@@ -55,6 +60,7 @@ module.exports = Field.create({
 				{/* This input element fools Safari's autocorrect in certain situations that completely break react-select */}
 				<input type="text" style={{ position: 'absolute', width: 1, height: 1, zIndex: -1, opacity: 0 }} tabIndex="-1"/>
 				<Select
+					multi={multi}
 					simpleValue
 					name={this.getInputName(path)}
 					value={value}

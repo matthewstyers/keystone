@@ -10,10 +10,11 @@ var utils = require('keystone-utils');
  */
 function select (list, path, options) {
 	this.ui = options.ui || 'select';
+	this.multi = options.multi ? true : false;
 	this.numeric = options.numeric ? true : false;
-	this._nativeType = (options.numeric) ? Number : String;
+	this._nativeType = options.multi ? Array : (options.numeric) ? Number : String;
 	this._underscoreMethods = ['format', 'pluck'];
-	this._properties = ['ops', 'numeric'];
+	this._properties = ['ops', 'numeric', 'multi'];
 	if (typeof options.options === 'string') {
 		options.options = options.options.split(',');
 	}
@@ -21,7 +22,8 @@ function select (list, path, options) {
 		throw new Error('Select fields require an options array.');
 	}
 	this.ops = options.options.map(function (i) {
-		var op = typeof i === 'string' ? { value: i.trim(), label: utils.keyToLabel(i) } : i;
+		var op = typeof i === 'string'
+			? { value: i.trim(), label: utils.keyToLabel(i) } : i;
 		if (!_.isObject(op)) {
 			op = { label: '' + i, value: '' + i };
 		}
@@ -60,13 +62,23 @@ select.prototype.addToSchema = function (schema) {
 		options: this.options.optionsPath || this.path + 'Options',
 		map: this.options.optionsMapPath || this.path + 'OptionsMap',
 	};
-	schema.path(this.path, _.defaults({
+	const def = _.defaults({
 		type: this._nativeType,
 		enum: this.values,
 		set: function (val) {
-			return (val === '' || val === null || val === false) ? undefined : val;
+			if (field.multi) {
+				return (val === '' || val === null || val === false || val === [])
+				? []
+				: typeof val === Array
+				? val
+				: [val];
+			} else {
+				return (val === '' || val === null || val === false) ? undefined : val;
+			}
 		},
-	}, this.options));
+	}, this.options);
+	schema.path(this.path, field.multi ? [def] : def);
+
 	schema.virtual(this.paths.data).get(function () {
 		return field.map[this.get(field.path)];
 	});
@@ -134,7 +146,16 @@ select.prototype.validateInput = function (data, callback) {
 	if (typeof value === 'string' && this.numeric) {
 		value = utils.number(value);
 	}
-	var result = value === undefined || value === null || value === '' || (value in this.map) ? true : false;
+	var result = false;
+	if (this.multi) {
+		if (!Array.isArray(value) && typeof value === 'string' && value.length) {
+			value = [value];
+		}
+		if (Array.isArray(value)) {
+			result = true;
+		}
+	} else if (value === undefined || value === null || value === '') result = true;
+	else if ((value in this.map)) result = true;
 	utils.defer(callback, result);
 };
 
@@ -143,20 +164,19 @@ select.prototype.validateInput = function (data, callback) {
  */
 select.prototype.validateRequiredInput = function (item, data, callback) {
 	var value = this.getValueFromData(data);
+	if (typeof value === 'string' && this.numeric) {
+		value = utils.number(value);
+	}
 	var result = false;
-	if (value === undefined) {
-		if (item.get(this.path)) {
+	if (this.multi) {
+		if (!Array.isArray(value) && typeof value === 'string' && value.length) {
+			value = [value];
+		}
+		if (Array.isArray(value)) {
 			result = true;
 		}
-	} else if (value) {
-		if (value !== '') {
-			// This is already checkind in validateInput, but it doesn't hurt
-			// to check again for security
-			if (value in this.map) {
-				result = true;
-			}
-		}
-	}
+	} else if (value === undefined || value === null || value === '') result = true;
+	else if ((value in this.map)) result = true;
 	utils.defer(callback, result);
 };
 
@@ -167,7 +187,11 @@ select.prototype.validateRequiredInput = function (item, data, callback) {
  */
 select.prototype.inputIsValid = function (data, required, item) {
 	if (data[this.path]) {
-		return (data[this.path] in this.map) ? true : false;
+		if (this.multi) {
+			return _.isEmpty(_.filter(data[this.path], (item) => !(item in this.map)));
+		} else {
+			return (data[this.path] in this.map) ? true : false;
+		}
 	} else {
 		return (!required || (!(this.path in data) && item && item.get(this.path))) ? true : false;
 	}
