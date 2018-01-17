@@ -68,10 +68,7 @@ select.prototype.addToSchema = function (schema) {
 		set: function (val) {
 			if (field.multi) {
 				return (val === '' || val === null || val === false || val === [])
-				? []
-				: typeof val === Array
-				? val
-				: [val];
+				? [] : typeof val === Array ? val : [val];
 			} else {
 				return (val === '' || val === null || val === false) ? undefined : val;
 			}
