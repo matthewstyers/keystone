@@ -2,7 +2,6 @@
 
 Stores a `String` in the model.
 Displayed as a text field in the Admin UI.
-This field does not validate input before saving, and will not reject data that is not a url.
 
 ```js
   { type: Types.Url }

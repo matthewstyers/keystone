@@ -73,6 +73,9 @@ location.prototype.addToSchema = function (schema) {
 		serialised: this.path + '.serialised',
 		improve: this.path + '_improve',
 		overwrite: this.path + '_improve_overwrite',
+		description: this.path + '.description',
+		placeId: this.path + '.placeId',
+		park: this.path + '.park',
 	};
 
 	var getFieldDef = function (type, key) {
@@ -95,6 +98,9 @@ location.prototype.addToSchema = function (schema) {
 		postcode: getFieldDef(String, 'postcode'),
 		country: getFieldDef(String, 'country'),
 		geo: { type: [Number], index: '2dsphere' },
+		description: getFieldDef(String, 'description'),
+		placeId: getFieldDef(String, 'placeId'),
+		park: getFieldDef(String, 'park'),
 	}, this.path + '.');
 
 	schema.virtual(paths.serialised).get(function () {
@@ -193,6 +199,9 @@ location.prototype.getInputFromData = function (data) {
 			state: data[this.paths.state],
 			postcode: data[this.paths.postcode],
 			country: data[this.paths.country],
+			description: data[this.paths.description],
+			placeId: data[this.paths.placeId],
+			park: data[this.paths.park],
 			geo: data[this.paths.geo],
 			geo_lat: data[this.paths.geo],
 			geo_lng: data[this.paths.geo],
@@ -272,7 +281,7 @@ location.prototype.inputIsValid = function (data, required, item) {
 location.prototype.updateItem = function (item, data, callback) {
 
 	var paths = this.paths;
-	var fieldKeys = ['number', 'name', 'street1', 'street2', 'suburb', 'state', 'postcode', 'country'];
+	var fieldKeys = ['number', 'name', 'street1', 'street2', 'suburb', 'state', 'postcode', 'country', 'description', 'placeId', 'park'];
 	var geoKeys = ['geo', 'geo_lat', 'geo_lng'];
 	var valueKeys = fieldKeys.concat(geoKeys);
 	var valuePaths = valueKeys;
@@ -523,17 +532,17 @@ function calculateDistance (point1, point2) {
 }
 
 /**
- * Returns the distance from a [lng, lat] point in kilometres
+ * Returns the distance from a [lat, lng] point in kilometres
  */
 location.prototype.kmFrom = function (item, point) {
-	return calculateDistance(item.get(this.paths.geo), point) * RADIUS_KM;
+	return calculateDistance(this.get(this.paths.geo), point) * RADIUS_KM;
 };
 
 /**
- * Returns the distance from a [lng, lat] point in miles
+ * Returns the distance from a [lat, lng] point in miles
  */
 location.prototype.milesFrom = function (item, point) {
-	return calculateDistance(item.get(this.paths.geo), point) * RADIUS_MILES;
+	return calculateDistance(this.get(this.paths.geo), point) * RADIUS_MILES;
 };
 
 /* Export Field Type */
