@@ -2,9 +2,7 @@
 
 Stores an `Array` of `Number` values in the model.
 
-Displayed as two text input fields in the Admin UI of latitude and longitude.
-
-If you are updating the database, it requires the two numbers to be in [longitude, latitude] order.
+Displayed as two text input fields in the Admin UI.
 
 ## Example
 ```js

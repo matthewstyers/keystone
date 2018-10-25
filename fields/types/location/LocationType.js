@@ -73,6 +73,9 @@ location.prototype.addToSchema = function (schema) {
 		serialised: this.path + '.serialised',
 		improve: this.path + '_improve',
 		overwrite: this.path + '_improve_overwrite',
+		description: this.path + '.description',
+		placeId: this.path + '.placeId',
+		park: this.path + '.park',
 	};
 
 	var getFieldDef = function (type, key) {
@@ -95,6 +98,9 @@ location.prototype.addToSchema = function (schema) {
 		postcode: getFieldDef(String, 'postcode'),
 		country: getFieldDef(String, 'country'),
 		geo: { type: [Number], index: '2dsphere' },
+		description: getFieldDef(String, 'description'),
+		placeId: getFieldDef(String, 'placeId'),
+		park: getFieldDef(String, 'park'),
 	}, this.path + '.');
 
 	schema.virtual(paths.serialised).get(function () {
@@ -193,6 +199,9 @@ location.prototype.getInputFromData = function (data) {
 			state: data[this.paths.state],
 			postcode: data[this.paths.postcode],
 			country: data[this.paths.country],
+			description: data[this.paths.description],
+			placeId: data[this.paths.placeId],
+			park: data[this.paths.park],
 			geo: data[this.paths.geo],
 			geo_lat: data[this.paths.geo],
 			geo_lng: data[this.paths.geo],
@@ -272,7 +281,7 @@ location.prototype.inputIsValid = function (data, required, item) {
 location.prototype.updateItem = function (item, data, callback) {
 
 	var paths = this.paths;
-	var fieldKeys = ['number', 'name', 'street1', 'street2', 'suburb', 'state', 'postcode', 'country'];
+	var fieldKeys = ['number', 'name', 'street1', 'street2', 'suburb', 'state', 'postcode', 'country', 'description', 'placeId', 'park'];
 	var geoKeys = ['geo', 'geo_lat', 'geo_lng'];
 	var valueKeys = fieldKeys.concat(geoKeys);
 	var valuePaths = valueKeys;
@@ -320,8 +329,8 @@ location.prototype.updateItem = function (item, data, callback) {
 	if (doGoogleLookup) {
 		var googleUpdateMode = this.getValueFromData(data, '_improve_overwrite') ? 'overwrite' : true;
 		this.googleLookup(item, false, googleUpdateMode, function (err, location, result) {
-			// TODO: we are currently discarding the error; it should probably be
-			// sent back in the response, needs consideration
+			// TODO: we are currently log the error but otherwise discard it; should probably be returned.. needs consideration
+			if (err) console.error(err);
 			callback();
 		});
 		return;
@@ -431,7 +440,8 @@ location.prototype.googleLookup = function (item, region, update, callback) {
 
 		_.forEach(result.address_components, function (val) {
 			if (_.indexOf(val.types, 'street_number') >= 0) {
-				location.street1 = [val.long_name];
+				location.street1 = location.street1 || [];
+				location.street1.unshift(val.long_name);
 			}
 			if (_.indexOf(val.types, 'route') >= 0) {
 				location.street1 = location.street1 || [];
@@ -449,6 +459,23 @@ location.prototype.googleLookup = function (item, region, update, callback) {
 			}
 			if (_.indexOf(val.types, 'postal_code') >= 0) {
 				location.postcode = val.short_name;
+			}
+
+			// These address_components could arguable all map to our 'number' field
+			// .. https://developers.google.com/maps/documentation/geocoding/intro#GeocodingResponses
+
+			// `subpremise` - "Indicates a first-order entity below a named location, usually a singular building within a collection of buildings with a common name"
+			// In practice this is often the unit/apartment number or level and is not always included
+			if (_.indexOf(val.types, 'subpremise') >= 0) {
+				location.number = val.short_name;
+			}
+
+			// These are all optional (rarely used?) and probably shouldn't replace the number if already set (due to subpremise)
+			// `floor` - Indicates the floor of a building address.
+			// `post_box` - Indicates a specific postal box.
+			// `room` - Indicates the room of a building address.
+			if (_.indexOf(val.types, 'floor') >= 0 || _.indexOf(val.types, 'post_box') >= 0 || _.indexOf(val.types, 'room') >= 0) {
+				location.number = location.number || val.short_name;
 			}
 		});
 
@@ -505,17 +532,17 @@ function calculateDistance (point1, point2) {
 }
 
 /**
- * Returns the distance from a [lng, lat] point in kilometres
+ * Returns the distance from a [lat, lng] point in kilometres
  */
 location.prototype.kmFrom = function (item, point) {
-	return calculateDistance(item.get(this.paths.geo), point) * RADIUS_KM;
+	return calculateDistance(this.get(this.paths.geo), point) * RADIUS_KM;
 };
 
 /**
- * Returns the distance from a [lng, lat] point in miles
+ * Returns the distance from a [lat, lng] point in miles
  */
 location.prototype.milesFrom = function (item, point) {
-	return calculateDistance(item.get(this.paths.geo), point) * RADIUS_MILES;
+	return calculateDistance(this.get(this.paths.geo), point) * RADIUS_MILES;
 };
 
 /* Export Field Type */
